@@ -21,7 +21,8 @@ import Color from "./enum/Color";
 import Font from "./enum/Font";
 
 export default function App() {
-  const [users, setUsers] = useState([{ name: "Sarah" }]);
+  const [users, setUsers] = useState([{ name: "You" }, { name: "Sarah" }]);
+  const [whoPay, setWhoPay] = useState("You");
   const [whatFor, setWhatFor] = useState("");
   const [howMuch, setHowMuch] = useState(""); // [1] Must be number type.
   const [fontLoad] = useFonts({ Nunito_700Bold, Nunito_400Regular });
@@ -29,69 +30,125 @@ export default function App() {
   // Wait for fonts to loaded
   if (!fontLoad) return <AppLoading />;
 
+  // [1] Check `howMuch` type. Must parse it to number.
+  const validForm: () => boolean = () => {
+    if (whatFor.length && howMuch.length && whoPay.length) {
+      if (!isNaN(parseFloat(howMuch))) return true;
+    }
+    return false;
+  };
+
   // Submit the form
-  // [1] Check `howMuch` type. Must be number.
+  const submitForm: () => void = () => {
+    const howMuchParsed = parseFloat(howMuch); // safe via validForm check
+    console.log(whoPay, "paid", howMuchParsed, "for", whatFor);
+  };
 
   return (
     <SafeAreaView>
       <StatusBar style="auto" />
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <View style={{ paddingHorizontal: 20 }}>
-          <Title name="Add expense">
-            <Text style={{ fontSize: 18, fontFamily: Font.regular }}>
-              For {}
-              <Text style={{ fontFamily: Font.bold }}>You</Text>
-              {} and {}
-              <Text style={{ fontFamily: Font.bold }}>Sarah</Text>
-            </Text>
-          </Title>
+        <View
+          style={{
+            display: "flex",
+            height: "100%",
+            justifyContent: "space-between",
+            paddingHorizontal: 20,
+          }}
+        >
+          <View>
+            {/* Screen Title */}
+            <Title name="Add expense">
+              <Text style={{ fontSize: 18, fontFamily: Font.regular }}>
+                For {}
+                <Text style={{ fontFamily: Font.bold }}>You</Text>
+                {} and {}
+                <Text style={{ fontFamily: Font.bold }}>Sarah</Text>
+              </Text>
+            </Title>
 
-          <View style={{ marginTop: 0 }}>
-            <View style={{ marginBottom: 20 }}>
-              <Label title="Who pays ?" />
-              <Users users={users} />
+            {/* Form */}
+            <View style={{ marginTop: 0 }}>
+              <View style={{ marginBottom: 20 }}>
+                <Label title="Who pays ?" />
+                <Users
+                  users={users}
+                  selected={whoPay}
+                  changeUser={(name) => setWhoPay(name)}
+                />
+              </View>
+
+              <View style={{ marginBottom: 20 }}>
+                <Label title="What for ?" />
+                <TextInput
+                  style={{
+                    borderWidth: 1,
+                    borderColor: Color.darkLight,
+                    borderRadius: 10,
+                    height: 45,
+                    paddingHorizontal: 10,
+                    fontFamily: Font.bold,
+                    fontSize: 18,
+                  }}
+                  value={whatFor}
+                  onChangeText={setWhatFor}
+                />
+              </View>
+
+              <View style={{ marginBottom: 20 }}>
+                <Label title="How much ?" />
+                <TextInput
+                  style={{
+                    borderWidth: 1,
+                    borderColor: Color.darkLight,
+                    borderRadius: 10,
+                    height: 45,
+                    paddingHorizontal: 10,
+                    fontFamily: Font.bold,
+                    fontSize: 18,
+                  }}
+                  value={howMuch}
+                  keyboardType="decimal-pad"
+                  onChangeText={setHowMuch}
+                />
+              </View>
+
+              <View style={{ marginBottom: 20 }}>
+                <TouchableOpacity>
+                  <Label title="Today" />
+                </TouchableOpacity>
+              </View>
             </View>
+          </View>
 
-            <View style={{ marginBottom: 20 }}>
-              <Label title="What for ?" />
-              <TextInput
-                style={{
-                  borderWidth: 1,
-                  borderColor: Color.darkLight,
+          {/* Submit button */}
+          <View style={{ marginBottom: 20 }}>
+            <Pressable
+              onPress={submitForm}
+              disabled={!validForm()}
+              style={({ pressed }) => [
+                {
+                  display: "flex",
+                  alignItems: "center",
+                  opacity: pressed ? 0.8 : 1,
+                  backgroundColor: validForm()
+                    ? Color.primary
+                    : Color.darkLight,
                   borderRadius: 10,
-                  height: 45,
-                  paddingHorizontal: 10,
-                  fontFamily: Font.bold,
-                  fontSize: 18,
-                }}
-                value={whatFor}
-                onChangeText={setWhatFor}
-              />
-            </View>
-
-            <View style={{ marginBottom: 20 }}>
-              <Label title="How much ?" />
-              <TextInput
+                },
+              ]}
+            >
+              <Text
                 style={{
-                  borderWidth: 1,
-                  borderColor: Color.darkLight,
-                  borderRadius: 10,
-                  height: 45,
-                  paddingHorizontal: 10,
-                  fontFamily: Font.bold,
                   fontSize: 18,
+                  color: "white",
+                  fontFamily: Font.bold,
+                  paddingVertical: 12,
                 }}
-                value={howMuch}
-                keyboardType="number-pad"
-                onChangeText={setHowMuch}
-              />
-            </View>
-
-            <View style={{ marginBottom: 20 }}>
-              <TouchableOpacity>
-                <Label title="Today" />
-              </TouchableOpacity>
-            </View>
+              >
+                Done
+              </Text>
+            </Pressable>
           </View>
         </View>
       </TouchableWithoutFeedback>
@@ -99,6 +156,7 @@ export default function App() {
   );
 }
 
+// Label for input
 const Label = ({ title }: { title: string }) => {
   return (
     <View style={{ marginBottom: 10 }}>
@@ -107,57 +165,42 @@ const Label = ({ title }: { title: string }) => {
   );
 };
 
-const Users = ({ users }: { users?: { name: string }[] }) => {
-  const [whoPay, setWhoPay] = useState("You");
-
-  const defaultUsers = users?.length
-    ? [{ name: "You" }, ...users]
-    : [{ name: "You" }];
-
-  return (
-    <View style={{ display: "flex", flexDirection: "row" }}>
-      {defaultUsers.map((user, idx) => (
-        <User
-          key={idx}
-          user={user}
-          selected={whoPay}
-          changeUser={(name) => setWhoPay(name)}
-        />
-      ))}
-    </View>
-  );
-};
-
-const User = ({
-  user,
+// User like tag
+const Users = ({
+  users,
   selected,
   changeUser,
 }: {
-  user: { name: string };
+  users: { name: string }[];
   selected: string;
   changeUser: (name: string) => void;
 }) => {
-  const { name } = user;
   return (
-    <Pressable
-      onPress={() => changeUser(name)}
-      style={{
-        backgroundColor: selected === name ? Color.primary : "transparent",
-        paddingHorizontal: 15,
-        paddingVertical: 5,
-        borderRadius: 10,
-        marginRight: 10,
-      }}
-    >
-      <Text
-        style={{
-          fontSize: 18,
-          color: selected === name ? "white" : "black",
-          fontFamily: Font.bold,
-        }}
-      >
-        {name}
-      </Text>
-    </Pressable>
+    <View style={{ display: "flex", flexDirection: "row" }}>
+      {users.map((user, idx) => (
+        <Pressable
+          key={idx}
+          onPress={() => changeUser(user.name)}
+          style={{
+            backgroundColor:
+              selected === user.name ? Color.primary : "transparent",
+            paddingHorizontal: 15,
+            paddingVertical: 5,
+            borderRadius: 10,
+            marginRight: 10,
+          }}
+        >
+          <Text
+            style={{
+              fontSize: 18,
+              color: selected === user.name ? "white" : "black",
+              fontFamily: Font.bold,
+            }}
+          >
+            {user.name}
+          </Text>
+        </Pressable>
+      ))}
+    </View>
   );
 };
