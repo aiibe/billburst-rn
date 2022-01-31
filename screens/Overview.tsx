@@ -1,7 +1,15 @@
-import { View, Text, Pressable, ScrollView } from "react-native";
+import { useNavigation } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { Pressable, ScrollView, Text, View } from "react-native";
 import Title from "../components/Title";
 import Color from "../enum/Color";
 import Font from "../enum/Font";
+import { RootStackParamsList } from "./types/Navigation";
+
+type OverviewScreenProps = NativeStackNavigationProp<
+  RootStackParamsList,
+  "Overview"
+>;
 
 export default function Overview() {
   return (
@@ -10,6 +18,7 @@ export default function Overview() {
         display: "flex",
         height: "100%",
         paddingHorizontal: 20,
+        backgroundColor: "white",
       }}
     >
       <Title name="Overview" />
@@ -52,8 +61,10 @@ const FriendList = () => {
 };
 
 const Friend = () => {
+  const { navigate } = useNavigation<OverviewScreenProps>();
   return (
     <Pressable
+      onPress={() => navigate("Friend")}
       style={{
         backgroundColor: Color.grayLight,
         borderRadius: 15,
