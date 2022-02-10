@@ -80,13 +80,13 @@ const FriendList = ({ transactions }: IFriendListProps) => {
 };
 
 const Friend = ({ transaction }: IFriendProps) => {
-  const navigation = useNavigation<IOverviewScreenProps>();
+  const { navigate } = useNavigation<IOverviewScreenProps>();
   const friend = transaction[0];
   const amount = transaction[1];
 
   return (
     <Pressable
-      onPress={() => navigation.navigate("Friend")}
+      onPress={() => navigate("Friend")}
       style={{
         backgroundColor: Color.grayLight,
         borderRadius: 15,

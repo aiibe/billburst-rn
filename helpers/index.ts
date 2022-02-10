@@ -1,4 +1,4 @@
-import { TransactionType } from "../redux/types/transaction";
+import { ITransaction } from "../redux/types/transaction";
 
 export interface IGroupTransaction {
   0: string;
@@ -6,9 +6,9 @@ export interface IGroupTransaction {
 }
 
 // Group and sum transactions into tuples like ['Sarah', -45]
-export const groupTransactions = (transactions: TransactionType[]) => {
+export const groupTransactions = (transactions: ITransaction[]) => {
   return transactions
-    .reduce((acc: IGroupTransaction[], transaction: TransactionType) => {
+    .reduce((acc: IGroupTransaction[], transaction: ITransaction) => {
       transaction.lender === "You"
         ? acc.push([transaction.lendee, transaction.amount])
         : acc.push([transaction.lender, -transaction.amount]);

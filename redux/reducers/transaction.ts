@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { TransactionType } from "../types/transaction";
+import { ITransaction } from "../types/transaction";
 
-const initialState: TransactionType[] = [
+const initialState: ITransaction[] = [
   {
     lender: "You",
     lendee: "Sarah",
