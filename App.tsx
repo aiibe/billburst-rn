@@ -28,7 +28,11 @@ export default function App() {
     <Provider store={store}>
       <NavigationContainer>
         <Navigator>
-          <Screen name="Overview" component={Overview} />
+          <Screen
+            name="Overview"
+            component={Overview}
+            options={{ headerShown: false }}
+          />
           <Screen name="Friend" component={Friend} />
 
           {/* <SafeAreaView> */}

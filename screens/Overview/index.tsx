@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text } from "react-native";
+import { Text, View } from "react-native";
 import { useSelector } from "react-redux";
 import Title from "../../components/Title";
 import Color from "../../enum/Color";
@@ -22,6 +22,7 @@ export default function Overview() {
       style={{
         display: "flex",
         height: "100%",
+        paddingTop: 20,
         paddingHorizontal: 20,
         backgroundColor: "white",
       }}

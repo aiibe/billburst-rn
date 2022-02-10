@@ -21,7 +21,7 @@ const Friend = ({ transaction }: IFriendProps) => {
 
   return (
     <Pressable
-      onPress={() => navigate("Friend")}
+      onPress={() => navigate("Friend", { name: friend })}
       style={{
         backgroundColor: Color.grayLight,
         borderRadius: 15,
