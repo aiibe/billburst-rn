@@ -1,17 +1,34 @@
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { Pressable, ScrollView, Text, View } from "react-native";
+import { useSelector } from "react-redux";
 import Title from "../components/Title";
 import Color from "../enum/Color";
 import Font from "../enum/Font";
+import { groupTransactions, IGroupTransaction } from "../helpers";
+import { RootState } from "../redux/store";
 import { RootStackParamsList } from "./types/Navigation";
 
-type OverviewScreenProps = NativeStackNavigationProp<
-  RootStackParamsList,
-  "Overview"
->;
+interface IOverviewScreenProps
+  extends NativeStackNavigationProp<RootStackParamsList, "Overview"> {}
+
+interface IFriendListProps {
+  transactions: IGroupTransaction[];
+}
+
+interface IFriendProps {
+  transaction: IGroupTransaction;
+}
 
 export default function Overview() {
+  const { transactions } = useSelector((state: RootState) => state);
+  const groups = groupTransactions(transactions);
+  const oweAmount = groups.reduce(
+    (total, transaction) => (total += transaction[1]),
+    0
+  );
+  const oweAmountAbs = Math.abs(oweAmount);
+
   return (
     <View
       style={{
@@ -24,7 +41,8 @@ export default function Overview() {
       <Title name="Overview" />
       <View
         style={{
-          backgroundColor: Color.dangerousLight,
+          backgroundColor:
+            oweAmount < 0 ? Color.dangerousLight : Color.warningLight,
           padding: 20,
           borderRadius: 15,
           marginBottom: 20,
@@ -37,34 +55,38 @@ export default function Overview() {
           style={{
             fontFamily: Font.bold,
             fontSize: 22,
-            color: Color.dangerous,
+            color: oweAmount < 0 ? Color.dangerous : Color.primary,
           }}
         >
-          You owe $1,659
+          {oweAmount < 0
+            ? `You owe $${oweAmountAbs}`
+            : `You lend $${oweAmountAbs}`}
         </Text>
       </View>
 
-      <FriendList />
+      <FriendList transactions={groups} />
     </View>
   );
 }
 
-const FriendList = () => {
+const FriendList = ({ transactions }: IFriendListProps) => {
   return (
     <ScrollView style={{ flexGrow: 1 }} showsVerticalScrollIndicator={false}>
-      {/* Hardcoded for ScrollView test */}
-      {[...Array(10)].map((friend, idx) => (
-        <Friend key={idx} />
+      {transactions.map((transaction, idx) => (
+        <Friend key={idx} transaction={transaction} />
       ))}
     </ScrollView>
   );
 };
 
-const Friend = () => {
-  const { navigate } = useNavigation<OverviewScreenProps>();
+const Friend = ({ transaction }: IFriendProps) => {
+  const navigation = useNavigation<IOverviewScreenProps>();
+  const friend = transaction[0];
+  const amount = transaction[1];
+
   return (
     <Pressable
-      onPress={() => navigate("Friend")}
+      onPress={() => navigation.navigate("Friend")}
       style={{
         backgroundColor: Color.grayLight,
         borderRadius: 15,
@@ -81,7 +103,7 @@ const Friend = () => {
           justifyContent: "space-between",
         }}
       >
-        <Text style={{ fontFamily: Font.bold, fontSize: 18 }}>Jean</Text>
+        <Text style={{ fontFamily: Font.bold, fontSize: 18 }}>{friend}</Text>
         <View
           style={{
             display: "flex",
@@ -94,10 +116,10 @@ const Friend = () => {
             style={{
               fontFamily: Font.bold,
               fontSize: 16,
-              color: Color.dangerous,
+              color: amount < 0 ? Color.dangerous : Color.primary,
             }}
           >
-            $23
+            {"$" + Math.abs(amount)}
           </Text>
           <Text
             style={{
