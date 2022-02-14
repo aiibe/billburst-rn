@@ -10,6 +10,10 @@ const Title = ({
   return (
     <View
       style={{
+        display: "flex",
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "space-between",
         marginVertical: 20,
       }}
     >

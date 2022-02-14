@@ -1,3 +1,4 @@
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useState } from "react";
 import {
   Keyboard,
@@ -11,8 +12,11 @@ import {
 import Title from "../components/Title";
 import Color from "../enum/Color";
 import Font from "../enum/Font";
+import { RootStackParamsList } from "./types/Navigation";
 
-export default function AddExpense() {
+export default function AddExpense({
+  navigation: { goBack },
+}: NativeStackScreenProps<RootStackParamsList, "AddExpense">) {
   const [users, setUsers] = useState([{ name: "You" }, { name: "Sarah" }]);
   const [whoPay, setWhoPay] = useState("You");
   const [whatFor, setWhatFor] = useState("");
@@ -42,16 +46,23 @@ export default function AddExpense() {
           paddingHorizontal: 20,
         }}
       >
-        <View>
+        <View style={{ marginTop: 10 }}>
           {/* Screen Title */}
-          <Title name="Add expense">
+          <View
+            style={{
+              marginBottom: 10,
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "center",
+            }}
+          >
             <Text style={{ fontSize: 18, fontFamily: Font.regular }}>
               For {}
               <Text style={{ fontFamily: Font.bold }}>You</Text>
               {} and {}
               <Text style={{ fontFamily: Font.bold }}>Sarah</Text>
             </Text>
-          </Title>
+          </View>
 
           {/* Form */}
           <View style={{ marginTop: 0 }}>

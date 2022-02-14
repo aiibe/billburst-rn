@@ -8,6 +8,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import AppLoading from "expo-app-loading";
 import { Provider } from "react-redux";
 import { store } from "./redux/store";
+import AddExpense from "./screens/AddExpense";
 import Friend from "./screens/Friend";
 // import { StatusBar } from "expo-status-bar";
 // import { SafeAreaView } from "react-native";
@@ -16,7 +17,8 @@ import Overview from "./screens/Overview";
 import { RootStackParamsList } from "./screens/types/Navigation";
 
 // Stack
-const { Navigator, Screen } = createNativeStackNavigator<RootStackParamsList>();
+const { Navigator, Screen, Group } =
+  createNativeStackNavigator<RootStackParamsList>();
 
 export default function App() {
   const [fontLoad] = useFonts({ Nunito_700Bold, Nunito_400Regular });
@@ -28,17 +30,20 @@ export default function App() {
     <Provider store={store}>
       <NavigationContainer>
         <Navigator>
-          <Screen
-            name="Overview"
-            component={Overview}
-            options={{ headerShown: false }}
-          />
-          <Screen name="Friend" component={Friend} />
+          <Group>
+            <Screen
+              name="Overview"
+              component={Overview}
+              options={{ headerShown: false }}
+            />
+            <Screen name="Friend" component={Friend} />
+          </Group>
+          <Group screenOptions={{ presentation: "modal" }}>
+            <Screen name="Add expense" component={AddExpense} />
+          </Group>
 
           {/* <SafeAreaView> */}
           {/* <StatusBar style="auto" /> */}
-          {/* <AddExpense /> */}
-          {/* <Overview /> */}
           {/* </SafeAreaView> */}
         </Navigator>
       </NavigationContainer>
