@@ -1,19 +1,24 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { View, Pressable, Text } from "react-native";
 import Color from "../../enum/Color";
 import Font from "../../enum/Font";
 import AddFriend from "./AddFriend";
 
+interface IFriendsProps {
+  users: { name: string }[];
+  selected: string;
+  changeUser: (name: string) => void;
+  addUser: (name: string) => void;
+}
+
 export default function Friends({
   users,
   selected,
   changeUser,
-}: {
-  users: { name: string }[];
-  selected: string;
-  changeUser: (name: string) => void;
-}) {
-  const [addingUser, setAddingUser] = useState(false);
+  addUser,
+}: IFriendsProps) {
+  const [editing, setEditing] = useState(false);
+
   return (
     <View style={{ display: "flex", flexDirection: "row", flexWrap: "wrap" }}>
       {users.map((user, idx) => (
@@ -42,8 +47,9 @@ export default function Friends({
         </Pressable>
       ))}
       <AddFriend
-        editing={addingUser}
-        toggle={() => setAddingUser(!addingUser)}
+        submit={addUser}
+        editing={editing}
+        toggle={() => setEditing(!editing)}
       />
     </View>
   );

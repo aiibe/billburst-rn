@@ -1,21 +1,23 @@
 import { useState } from "react";
 import { Pressable, Text, TextInput, View } from "react-native";
-import { useDispatch } from "react-redux";
 import Color from "../../enum/Color";
 import Font from "../../enum/Font";
-import { addFriend } from "../../redux/reducers/expense";
 
 interface IAddFriendProps {
   toggle: () => void;
   editing: boolean;
+  submit: (name: string) => void;
 }
 
-export default function AddFriend({ editing, toggle }: IAddFriendProps) {
+export default function AddFriend({
+  editing,
+  toggle,
+  submit,
+}: IAddFriendProps) {
   const [friendName, setFriendName] = useState("");
-  const dispatch = useDispatch();
 
   const handleSubmit = () => {
-    dispatch(addFriend(friendName));
+    submit(friendName);
     toggle();
     setFriendName("");
   };

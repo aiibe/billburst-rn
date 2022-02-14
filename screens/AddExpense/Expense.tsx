@@ -1,13 +1,11 @@
 import { useState } from "react";
 import { Pressable, Text, TextInput, View } from "react-native";
-import { useSelector } from "react-redux";
 import Color from "../../enum/Color";
 import Font from "../../enum/Font";
-import { RootState } from "../../redux/store";
 import Friends from "./Friends";
 
 export default function Expense() {
-  const { users } = useSelector((state: RootState) => state.expense);
+  const [users, setUsers] = useState([{ name: "You" }]);
   const [whoPay, setWhoPay] = useState("You");
   const [whatFor, setWhatFor] = useState("");
   const [howMuch, setHowMuch] = useState(""); // [1] Must be number type.
@@ -35,6 +33,7 @@ export default function Expense() {
           style={{ display: "flex", flexDirection: "row", flexWrap: "wrap" }}
         >
           <Friends
+            addUser={(name) => setUsers((users) => [...users, { name }])}
             users={users}
             selected={whoPay}
             changeUser={(name) => setWhoPay(name)}
@@ -45,6 +44,8 @@ export default function Expense() {
       <View style={{ marginBottom: 20 }}>
         <Label title="What for ?" />
         <TextInput
+          value={whatFor}
+          onChangeText={setWhatFor}
           style={{
             borderWidth: 1,
             borderColor: Color.darkLight,
@@ -54,14 +55,15 @@ export default function Expense() {
             fontFamily: Font.bold,
             fontSize: 18,
           }}
-          value={whatFor}
-          onChangeText={setWhatFor}
         />
       </View>
 
       <View style={{ marginBottom: 20 }}>
         <Label title="How much ?" />
         <TextInput
+          value={howMuch}
+          keyboardType="decimal-pad"
+          onChangeText={setHowMuch}
           style={{
             borderWidth: 1,
             borderColor: Color.darkLight,
@@ -71,9 +73,6 @@ export default function Expense() {
             fontFamily: Font.bold,
             fontSize: 18,
           }}
-          value={howMuch}
-          keyboardType="decimal-pad"
-          onChangeText={setHowMuch}
         />
       </View>
 
@@ -118,7 +117,7 @@ export default function Expense() {
 const Label = ({ title }: { title: string }) => {
   return (
     <View style={{ marginBottom: 10 }}>
-      <Text style={{ fontSize: 20, fontFamily: Font.bold }}>{title}</Text>
+      <Text style={{ fontSize: 16, fontFamily: Font.bold }}>{title}</Text>
     </View>
   );
 };
