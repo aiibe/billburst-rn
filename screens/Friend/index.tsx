@@ -80,7 +80,7 @@ const Transaction = ({ lender, lendee, amount, date }: ITransaction) => {
               fontSize: 14,
             }}
           >
-            {date.toLocaleDateString()}
+            {new Date(JSON.parse(date)).toLocaleDateString()}
           </Text>
         </View>
         <Text
