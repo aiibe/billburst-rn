@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { IExpense } from "../types/expense";
 
 const initialState: IExpense = {
-  users: [],
+  users: [{ name: "You" }],
 };
 
 export const expenseSlice = createSlice({

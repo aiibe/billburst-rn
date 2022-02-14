@@ -4,11 +4,10 @@ import { useSelector } from "react-redux";
 import Color from "../../enum/Color";
 import Font from "../../enum/Font";
 import { RootState } from "../../redux/store";
+import Friends from "./Friends";
 
 export default function Expense() {
-  const {
-    expense: { users },
-  } = useSelector((state: RootState) => state);
+  const { users } = useSelector((state: RootState) => state.expense);
   const [whoPay, setWhoPay] = useState("You");
   const [whatFor, setWhatFor] = useState("");
   const [howMuch, setHowMuch] = useState(""); // [1] Must be number type.
@@ -28,14 +27,19 @@ export default function Expense() {
   };
 
   return (
-    <View style={{ marginTop: 0 }}>
+    <View style={{ marginTop: 10 }}>
       <View style={{ marginBottom: 20 }}>
         <Label title="Who pays ?" />
-        <Users
-          users={users}
-          selected={whoPay}
-          changeUser={(name) => setWhoPay(name)}
-        />
+
+        <View
+          style={{ display: "flex", flexDirection: "row", flexWrap: "wrap" }}
+        >
+          <Friends
+            users={users}
+            selected={whoPay}
+            changeUser={(name) => setWhoPay(name)}
+          />
+        </View>
       </View>
 
       <View style={{ marginBottom: 20 }}>
@@ -115,46 +119,6 @@ const Label = ({ title }: { title: string }) => {
   return (
     <View style={{ marginBottom: 10 }}>
       <Text style={{ fontSize: 20, fontFamily: Font.bold }}>{title}</Text>
-    </View>
-  );
-};
-
-// User like tag
-const Users = ({
-  users,
-  selected,
-  changeUser,
-}: {
-  users: { name: string }[];
-  selected: string;
-  changeUser: (name: string) => void;
-}) => {
-  return (
-    <View style={{ display: "flex", flexDirection: "row" }}>
-      {users.map((user, idx) => (
-        <Pressable
-          key={idx}
-          onPress={() => changeUser(user.name)}
-          style={{
-            backgroundColor:
-              selected === user.name ? Color.primary : "transparent",
-            paddingHorizontal: 15,
-            paddingVertical: 5,
-            borderRadius: 10,
-            marginRight: 10,
-          }}
-        >
-          <Text
-            style={{
-              fontSize: 18,
-              color: selected === user.name ? "white" : "black",
-              fontFamily: Font.bold,
-            }}
-          >
-            {user.name}
-          </Text>
-        </Pressable>
-      ))}
     </View>
   );
 };

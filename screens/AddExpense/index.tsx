@@ -4,7 +4,6 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
 import { RootStackParamsList } from "../types/Navigation";
 import Expense from "./Expense";
-import Members from "./Members";
 
 export default function AddExpense({
   navigation: { goBack },
@@ -19,12 +18,11 @@ export default function AddExpense({
         style={{
           display: "flex",
           height: "100%",
-          justifyContent: "space-between",
           paddingHorizontal: 20,
           backgroundColor: "white",
         }}
       >
-        {users.length > 1 ? <Expense /> : <Members />}
+        <Expense />
       </View>
     </TouchableWithoutFeedback>
   );
