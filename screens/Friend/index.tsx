@@ -47,7 +47,7 @@ export default function Friend({
   );
 }
 
-const Transaction = ({ lender, lendee, amount }: ITransaction) => {
+const Transaction = ({ lender, lendee, amount, date }: ITransaction) => {
   return (
     <View
       style={{
@@ -66,11 +66,23 @@ const Transaction = ({ lender, lendee, amount }: ITransaction) => {
           justifyContent: "space-between",
         }}
       >
-        <Text style={{ fontFamily: Font.regular, fontSize: 16 }}>
-          <Text style={{ fontFamily: Font.bold }}>{lender}</Text>
-          {` paid `}
-          <Text style={{ fontFamily: Font.bold }}>{lendee}</Text>
-        </Text>
+        <View>
+          <View>
+            <Text style={{ fontFamily: Font.regular, fontSize: 16 }}>
+              <Text style={{ fontFamily: Font.bold }}>{lender}</Text>
+              {` paid `}
+              <Text style={{ fontFamily: Font.bold }}>{lendee}</Text>
+            </Text>
+          </View>
+          <Text
+            style={{
+              fontFamily: Font.regular,
+              fontSize: 14,
+            }}
+          >
+            {date.toLocaleDateString()}
+          </Text>
+        </View>
         <Text
           style={{ fontFamily: Font.bold, fontSize: 16 }}
         >{`$${amount}`}</Text>
