@@ -5,6 +5,7 @@ import Color from "../../enum/Color";
 import Font from "../../enum/Font";
 import { setNewTransaction } from "../../redux/reducers/transaction";
 import Friends from "./Friends";
+import { divideTransactionEqually } from "./utils";
 
 interface IExpenseProps {
   goBack: () => void;
@@ -30,15 +31,21 @@ export default function Expense({ goBack }: IExpenseProps) {
     // [!] User's region uses comma or dot ?
     const howMuchParsed = parseFloat(howMuch.replace(/,/g, ".")); // safe via validForm check
 
-    dispatch(
-      setNewTransaction({
-        lender: whoPay,
-        lendee: "Suly", // [!] Lendees must be array of users
-        amount: howMuchParsed,
-        date: JSON.stringify(new Date()),
-        description: whatFor,
-      })
-    );
+    const transactions = divideTransactionEqually({
+      users,
+      amount: howMuchParsed,
+      lender: whoPay,
+    });
+
+    transactions.forEach((t) => {
+      dispatch(
+        setNewTransaction({
+          ...t,
+          date: JSON.stringify(new Date()),
+          description: whatFor,
+        })
+      );
+    });
 
     goBack();
   };
