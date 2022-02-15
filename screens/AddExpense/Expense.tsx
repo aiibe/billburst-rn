@@ -5,14 +5,13 @@ import Color from "../../enum/Color";
 import Font from "../../enum/Font";
 import { setNewTransaction } from "../../redux/reducers/transaction";
 import Friends from "./Friends";
-import { divideTransactionEqually } from "./utils";
 
 interface IExpenseProps {
   goBack: () => void;
 }
 
 export default function Expense({ goBack }: IExpenseProps) {
-  const [users, setUsers] = useState([{ name: "You" }]);
+  const [users, setUsers] = useState(["You"]);
   const [whoPay, setWhoPay] = useState("You");
   const [whatFor, setWhatFor] = useState("");
   const [howMuch, setHowMuch] = useState(""); // [1] Must be number type.
@@ -29,23 +28,20 @@ export default function Expense({ goBack }: IExpenseProps) {
   // Submit the form
   const submitForm: () => void = () => {
     // [!] User's region uses comma or dot ?
-    const howMuchParsed = parseFloat(howMuch.replace(/,/g, ".")); // safe via validForm check
+    const howMuchParsed = parseFloat(howMuch.replace(/,/g, "."));
+    const lendees: string[] = users.filter((name) => name !== whoPay);
 
-    const transactions = divideTransactionEqually({
-      users,
-      amount: howMuchParsed,
-      lender: whoPay,
-    });
-
-    transactions.forEach((t) => {
-      dispatch(
-        setNewTransaction({
-          ...t,
-          date: JSON.stringify(new Date()),
-          description: whatFor,
-        })
-      );
-    });
+    // [!] missing equalSplit ?
+    dispatch(
+      setNewTransaction({
+        lender: whoPay,
+        lendees,
+        amount: howMuchParsed,
+        date: JSON.stringify(new Date()),
+        description: whatFor,
+        equalSplit: true,
+      })
+    );
 
     goBack();
   };
@@ -59,7 +55,7 @@ export default function Expense({ goBack }: IExpenseProps) {
           style={{ display: "flex", flexDirection: "row", flexWrap: "wrap" }}
         >
           <Friends
-            addUser={(name) => setUsers((users) => [...users, { name }])}
+            addUser={(name) => setUsers((users) => [...users, name])}
             users={users}
             selected={whoPay}
             changeUser={(name) => setWhoPay(name)}

@@ -1,13 +1,10 @@
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useEffect } from "react";
-import { ScrollView, Text, View } from "react-native";
+import { ScrollView, View } from "react-native";
 import { useSelector } from "react-redux";
-import Color from "../../enum/Color";
-import Font from "../../enum/Font";
-import { groupTransactions } from "../../helpers";
 import { RootState } from "../../redux/store";
-import { ISingleTransaction } from "../../redux/types/transaction";
 import { RootStackParamsList } from "../types/Navigation";
+import Transaction from "./Transaction";
 
 export default function Friend({
   route,
@@ -15,10 +12,19 @@ export default function Friend({
 }: NativeStackScreenProps<RootStackParamsList, "Friend">) {
   const { name } = route.params;
   const { transactions } = useSelector((state: RootState) => state);
-  const groups = groupTransactions(transactions);
-  const withFriend = groups.filter(
-    ({ lendee, lender }) => lender === name || lendee === name
-  );
+
+  // Filter transactions included 'You' and current peer
+  // Sort descending
+  const withFriend = transactions
+    .filter(
+      ({ lendees, lender }) =>
+        lender === name || (lendees.includes(name) && lender === "You")
+    )
+    .sort(
+      (a, b) =>
+        new Date(JSON.parse(b.date)).getTime() -
+        new Date(JSON.parse(a.date)).getTime()
+    );
 
   useEffect(() => {
     // Set screen title
@@ -43,71 +49,3 @@ export default function Friend({
     </View>
   );
 }
-
-const Transaction = ({
-  lender,
-  lendee,
-  paid,
-  date,
-  description,
-}: ISingleTransaction) => {
-  // [!] Date is transformed at render => optimize with useMemo or use useCallback?
-
-  return (
-    <View
-      style={{
-        backgroundColor: Color.grayLight,
-        borderRadius: 15,
-        paddingHorizontal: 20,
-        paddingVertical: 15,
-        marginBottom: 10,
-      }}
-    >
-      <View
-        style={{
-          display: "flex",
-          flexDirection: "row",
-          alignItems: "center",
-          justifyContent: "space-between",
-        }}
-      >
-        <View>
-          <View>
-            {/* Description */}
-            <Text style={{ fontFamily: Font.bold, fontSize: 16 }}>
-              {description}
-            </Text>
-
-            {/* Transaction */}
-            <Text style={{ fontFamily: Font.regular, fontSize: 16 }}>
-              <Text style={{ fontFamily: Font.bold }}>{lender}</Text>
-              {` paid `}
-              <Text style={{ fontFamily: Font.bold }}>{lendee}</Text>
-            </Text>
-          </View>
-
-          {/* Date */}
-          <Text
-            style={{
-              fontFamily: Font.regular,
-              fontSize: 14,
-            }}
-          >
-            {new Date(JSON.parse(date)).toLocaleDateString()}
-          </Text>
-        </View>
-
-        <View>
-          {/* Amount */}
-          <Text
-            style={{
-              fontFamily: Font.bold,
-              fontSize: 16,
-              color: lender !== "You" ? Color.dangerous : Color.primary,
-            }}
-          >{`$${paid}`}</Text>
-        </View>
-      </View>
-    </View>
-  );
-};
