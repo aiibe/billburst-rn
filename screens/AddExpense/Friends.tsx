@@ -5,7 +5,7 @@ import Font from "../../enum/Font";
 import AddFriend from "./AddFriend";
 
 interface IFriendsProps {
-  users: { name: string }[];
+  users: string[];
   selected: string;
   changeUser: (name: string) => void;
   addUser: (name: string) => void;
@@ -21,13 +21,13 @@ export default function Friends({
 
   return (
     <View style={{ display: "flex", flexDirection: "row", flexWrap: "wrap" }}>
-      {users.map((user, idx) => (
+      {users.map((name, idx) => (
         <Pressable
           key={idx}
-          onPress={() => changeUser(user.name)}
+          onPress={() => changeUser(name)}
           style={{
             backgroundColor:
-              selected === user.name ? Color.primary : Color.grayLight,
+              selected === name ? Color.primary : Color.grayLight,
             paddingHorizontal: 15,
             paddingVertical: 5,
             borderRadius: 10,
@@ -38,11 +38,11 @@ export default function Friends({
           <Text
             style={{
               fontSize: 18,
-              color: selected === user.name ? "white" : "black",
+              color: selected === name ? "white" : "black",
               fontFamily: Font.bold,
             }}
           >
-            {user.name}
+            {name}
           </Text>
         </Pressable>
       ))}
