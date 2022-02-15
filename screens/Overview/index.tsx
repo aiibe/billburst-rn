@@ -20,7 +20,7 @@ export default function Overview({
   // Get total amount owe/lend for current user 'You'
   const totalOweAmount = summary.reduce((total, t) => (total += t[1]), 0);
   const isOwe = totalOweAmount < 0;
-  const totalOweAmountAbs = Math.abs(totalOweAmount);
+  const totalOweAmountAbs = Math.round(Math.abs(totalOweAmount) * 100) / 100;
 
   return (
     <View

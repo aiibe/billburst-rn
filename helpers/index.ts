@@ -35,7 +35,7 @@ export function sumTransactions(transactions: ISingleTransaction[]) {
     })
     .reduce((acc: [string, number][], transaction: any) => {
       const lender = transaction[0];
-      const amount = transaction[1];
+      const amount = Math.round(transaction[1] * 100) / 100;
 
       if (!peers.has(lender)) {
         peers.add(lender);
