@@ -13,7 +13,8 @@ export default function Friend({
   const { name } = route.params;
   const { transactions } = useSelector((state: RootState) => state);
   const withFriend = transactions.filter(
-    ({ lendees, lender }) => lender === name || lendees.includes(name)
+    ({ lendees, lender }) =>
+      lender === name || (lendees.includes(name) && lender === "You")
   );
 
   useEffect(() => {

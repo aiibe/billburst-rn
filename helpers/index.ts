@@ -8,7 +8,7 @@ export function burstTransactions(rawTransactions: ITransaction[]) {
       { lender, lendees, amount, equalSplit, ...rest }
     ) => {
       const paid = equalSplit
-        ? Math.round((amount / lendees.length) * 100) / 100
+        ? Math.round((amount / (lendees.length + 1)) * 100) / 100
         : amount;
       lendees.forEach((lendee) =>
         acc.push({ lender, paid, lendee, equalSplit, ...rest })
@@ -30,9 +30,9 @@ export function groupTransactions(transactions: ITransaction[]) {
 export function sumTransactions(transactions: ISingleTransaction[]) {
   const peers = new Set();
   return transactions
-    .map(({ lender, lendee, paid }) => {
-      return lendee === "You" ? [lender, -paid] : [lendee, paid];
-    })
+    .map(({ lender, lendee, paid }) =>
+      lendee === "You" ? [lender, -paid] : [lendee, paid]
+    )
     .reduce((acc: [string, number][], transaction: any) => {
       const lender = transaction[0];
       const amount = Math.round(transaction[1] * 100) / 100;

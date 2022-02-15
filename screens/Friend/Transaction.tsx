@@ -13,7 +13,8 @@ export default function Transaction({
 }: ITransaction) {
   // [!] Date is transformed at render => optimize with useMemo or use useCallback?
 
-  const owed = equalSplit ? amount / lendees.length + 1 : amount;
+  const owe = equalSplit ? amount / (lendees.length + 1) : amount;
+  const owed = Math.round(owe * 100) / 100;
 
   return (
     <View
