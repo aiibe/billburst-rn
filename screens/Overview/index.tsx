@@ -1,4 +1,3 @@
-import { useNavigation } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import React from "react";
 import { Pressable, Text, View } from "react-native";
@@ -6,7 +5,7 @@ import { useSelector } from "react-redux";
 import Title from "../../components/Title";
 import Color from "../../enum/Color";
 import Font from "../../enum/Font";
-import { groupTransactions } from "../../helpers";
+import { groupTransactions, sumTransactions } from "../../helpers";
 import { RootState } from "../../redux/store";
 import { RootStackParamsList } from "../types/Navigation";
 import FriendList from "./FriendList";
@@ -16,11 +15,12 @@ export default function Overview({
 }: NativeStackScreenProps<RootStackParamsList, "Overview">) {
   const { transactions } = useSelector((state: RootState) => state);
   const groups = groupTransactions(transactions);
-  const oweAmount = groups.reduce(
-    (total, transaction) => (total += transaction[1]),
-    0
-  );
-  const oweAmountAbs = Math.abs(oweAmount);
+  const summary = sumTransactions(groups);
+
+  // Get total amount owe/lend for current user 'You'
+  const totalOweAmount = summary.reduce((total, t) => (total += t[1]), 0);
+  const isOwe = totalOweAmount < 0;
+  const totalOweAmountAbs = Math.abs(totalOweAmount);
 
   return (
     <View
@@ -40,8 +40,7 @@ export default function Overview({
 
       <View
         style={{
-          backgroundColor:
-            oweAmount < 0 ? Color.dangerousLight : Color.warningLight,
+          backgroundColor: isOwe ? Color.dangerousLight : Color.warningLight,
           padding: 20,
           borderRadius: 15,
           marginBottom: 20,
@@ -54,16 +53,14 @@ export default function Overview({
           style={{
             fontFamily: Font.bold,
             fontSize: 22,
-            color: oweAmount < 0 ? Color.dangerous : Color.primary,
+            color: isOwe ? Color.dangerous : Color.primary,
           }}
         >
-          {oweAmount < 0
-            ? `You owe $${oweAmountAbs}`
-            : `You lend $${oweAmountAbs}`}
+          {`You ${isOwe ? "owe" : "lend"} $${totalOweAmountAbs}`}
         </Text>
       </View>
 
-      <FriendList transactions={groups} />
+      <FriendList transactions={summary} />
     </View>
   );
 }

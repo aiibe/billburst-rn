@@ -4,8 +4,9 @@ import { ScrollView, Text, View } from "react-native";
 import { useSelector } from "react-redux";
 import Color from "../../enum/Color";
 import Font from "../../enum/Font";
+import { groupTransactions } from "../../helpers";
 import { RootState } from "../../redux/store";
-import { ITransaction } from "../../redux/types/transaction";
+import { ISingleTransaction } from "../../redux/types/transaction";
 import { RootStackParamsList } from "../types/Navigation";
 
 export default function Friend({
@@ -14,11 +15,9 @@ export default function Friend({
 }: NativeStackScreenProps<RootStackParamsList, "Friend">) {
   const { name } = route.params;
   const { transactions } = useSelector((state: RootState) => state);
-
-  const userTransactions = transactions.filter(
-    ({ lender, lendee }) =>
-      (lender === name || lendee === name) &&
-      (lender === "You" || lendee === "You")
+  const groups = groupTransactions(transactions);
+  const withFriend = groups.filter(
+    ({ lendee, lender }) => lender === name || lendee === name
   );
 
   useEffect(() => {
@@ -37,7 +36,7 @@ export default function Friend({
     >
       <ScrollView>
         <View style={{ height: 20 }} />
-        {userTransactions.map((transaction, i) => (
+        {withFriend.map((transaction, i) => (
           <Transaction key={i} {...transaction} />
         ))}
       </ScrollView>
@@ -48,10 +47,10 @@ export default function Friend({
 const Transaction = ({
   lender,
   lendee,
-  amount,
+  paid,
   date,
   description,
-}: ITransaction) => {
+}: ISingleTransaction) => {
   // [!] Date is transformed at render => optimize with useMemo or use useCallback?
 
   return (
@@ -101,8 +100,12 @@ const Transaction = ({
         <View>
           {/* Amount */}
           <Text
-            style={{ fontFamily: Font.bold, fontSize: 16 }}
-          >{`$${amount}`}</Text>
+            style={{
+              fontFamily: Font.bold,
+              fontSize: 16,
+              color: lender !== "You" ? Color.dangerous : Color.primary,
+            }}
+          >{`$${paid}`}</Text>
         </View>
       </View>
     </View>

@@ -4,11 +4,10 @@ import React from "react";
 import { Pressable, Text, View } from "react-native";
 import Color from "../../enum/Color";
 import Font from "../../enum/Font";
-import { IGroupTransaction } from "../../helpers";
 import { RootStackParamsList } from "../types/Navigation";
 
 interface IFriendProps {
-  transaction: IGroupTransaction;
+  transaction: [string, number];
 }
 
 interface IOverviewScreenProps
