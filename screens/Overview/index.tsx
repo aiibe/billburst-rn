@@ -20,6 +20,7 @@ export default function Overview({
     (total, transaction) => (total += transaction[1]),
     0
   );
+  const isOwe = oweAmount < 0;
   const oweAmountAbs = Math.abs(oweAmount);
 
   return (
@@ -40,8 +41,7 @@ export default function Overview({
 
       <View
         style={{
-          backgroundColor:
-            oweAmount < 0 ? Color.dangerousLight : Color.warningLight,
+          backgroundColor: isOwe ? Color.dangerousLight : Color.warningLight,
           padding: 20,
           borderRadius: 15,
           marginBottom: 20,
@@ -54,12 +54,10 @@ export default function Overview({
           style={{
             fontFamily: Font.bold,
             fontSize: 22,
-            color: oweAmount < 0 ? Color.dangerous : Color.primary,
+            color: isOwe ? Color.dangerous : Color.primary,
           }}
         >
-          {oweAmount < 0
-            ? `You owe $${oweAmountAbs}`
-            : `You lend $${oweAmountAbs}`}
+          {`You ${isOwe ? "owe" : "lend"} $${oweAmountAbs}`}
         </Text>
       </View>
 
