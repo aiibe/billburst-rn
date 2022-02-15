@@ -2,7 +2,6 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useEffect } from "react";
 import { ScrollView, View } from "react-native";
 import { useSelector } from "react-redux";
-import { groupTransactions } from "../../helpers";
 import { RootState } from "../../redux/store";
 import { RootStackParamsList } from "../types/Navigation";
 import Transaction from "./Transaction";
@@ -13,9 +12,8 @@ export default function Friend({
 }: NativeStackScreenProps<RootStackParamsList, "Friend">) {
   const { name } = route.params;
   const { transactions } = useSelector((state: RootState) => state);
-  const groups = groupTransactions(transactions);
-  const withFriend = groups.filter(
-    ({ lendee, lender }) => lender === name || lendee === name
+  const withFriend = transactions.filter(
+    ({ lendees, lender }) => lender === name || lendees.includes(name)
   );
 
   useEffect(() => {

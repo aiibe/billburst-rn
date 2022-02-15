@@ -1,16 +1,20 @@
 import { Text, View } from "react-native";
 import Color from "../../enum/Color";
 import Font from "../../enum/Font";
-import { ISingleTransaction } from "../../redux/types/transaction";
+import { ITransaction } from "../../redux/types/transaction";
 
 export default function Transaction({
   lender,
-  lendee,
-  paid,
+  lendees,
+  amount,
   date,
   description,
-}: ISingleTransaction) {
+  equalSplit,
+}: ITransaction) {
   // [!] Date is transformed at render => optimize with useMemo or use useCallback?
+
+  const owed = equalSplit ? amount / lendees.length + 1 : amount;
+  const totalOwed = lender === "You" ? amount : owed;
 
   return (
     <View
@@ -31,18 +35,23 @@ export default function Transaction({
         }}
       >
         <View>
-          <View>
-            {/* Description */}
-            <Text style={{ fontFamily: Font.bold, fontSize: 16 }}>
-              {description}
-            </Text>
+          {/* Description */}
+          <Text style={{ fontFamily: Font.bold, fontSize: 18 }}>
+            {description}
+          </Text>
 
-            {/* Transaction */}
-            <Text style={{ fontFamily: Font.regular, fontSize: 16 }}>
-              <Text style={{ fontFamily: Font.bold }}>{lender}</Text>
-              {` paid `}
-              <Text style={{ fontFamily: Font.bold }}>{lendee}</Text>
-            </Text>
+          {/* Transaction */}
+          <Text style={{ fontFamily: Font.regular, fontSize: 16 }}>
+            <Text style={{ fontFamily: Font.bold }}>{lender}</Text>
+            {` paid `}
+            <Text style={{ fontFamily: Font.bold }}>${amount}</Text>
+          </Text>
+
+          {/* lendees */}
+          <View style={{ marginBottom: 5 }}>
+            {lendees.map((lendee) => (
+              <Text key={lendee}>{`-- ${lendee} owed $${owed}`}</Text>
+            ))}
           </View>
 
           {/* Date */}
@@ -64,7 +73,7 @@ export default function Transaction({
               fontSize: 16,
               color: lender !== "You" ? Color.dangerous : Color.primary,
             }}
-          >{`$${paid}`}</Text>
+          >{`$${totalOwed}`}</Text>
         </View>
       </View>
     </View>

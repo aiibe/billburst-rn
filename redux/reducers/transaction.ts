@@ -7,7 +7,7 @@ const initialState: ITransaction[] = [
     lendees: ["Sarah", "James"],
     amount: 34,
     date: JSON.stringify(new Date(2021, 7, 12)),
-    description: "Fast food",
+    description: "Concert",
     equalSplit: true,
   },
   {
