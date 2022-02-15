@@ -3,5 +3,6 @@ export interface ITransaction {
   lendee: string;
   amount: number;
   date: string;
+  description: string;
   // currency
 }
