@@ -12,10 +12,19 @@ export default function Friend({
 }: NativeStackScreenProps<RootStackParamsList, "Friend">) {
   const { name } = route.params;
   const { transactions } = useSelector((state: RootState) => state);
-  const withFriend = transactions.filter(
-    ({ lendees, lender }) =>
-      lender === name || (lendees.includes(name) && lender === "You")
-  );
+
+  // Filter transactions included 'You' and current peer
+  // Sort descending
+  const withFriend = transactions
+    .filter(
+      ({ lendees, lender }) =>
+        lender === name || (lendees.includes(name) && lender === "You")
+    )
+    .sort(
+      (a, b) =>
+        new Date(JSON.parse(b.date)).getTime() -
+        new Date(JSON.parse(a.date)).getTime()
+    );
 
   useEffect(() => {
     // Set screen title

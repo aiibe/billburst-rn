@@ -22,7 +22,7 @@ const initialState: ITransaction[] = [
     lender: "Sarah",
     lendees: ["You"],
     amount: 90,
-    date: JSON.stringify(new Date(2021, 7, 12)),
+    date: JSON.stringify(new Date(2021, 11, 4)),
     description: "Car repair",
     equalSplit: false,
   },
