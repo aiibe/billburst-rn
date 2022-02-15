@@ -8,8 +8,6 @@ import { RootState } from "../../redux/store";
 import { ITransaction } from "../../redux/types/transaction";
 import { RootStackParamsList } from "../types/Navigation";
 
-// !Screen title should be friend's name
-
 export default function Friend({
   route,
   navigation,
@@ -47,7 +45,15 @@ export default function Friend({
   );
 }
 
-const Transaction = ({ lender, lendee, amount, date }: ITransaction) => {
+const Transaction = ({
+  lender,
+  lendee,
+  amount,
+  date,
+  description,
+}: ITransaction) => {
+  // [!] Date is transformed at render => optimize with useMemo or use useCallback?
+
   return (
     <View
       style={{
@@ -68,12 +74,20 @@ const Transaction = ({ lender, lendee, amount, date }: ITransaction) => {
       >
         <View>
           <View>
+            {/* Description */}
+            <Text style={{ fontFamily: Font.bold, fontSize: 16 }}>
+              {description}
+            </Text>
+
+            {/* Transaction */}
             <Text style={{ fontFamily: Font.regular, fontSize: 16 }}>
               <Text style={{ fontFamily: Font.bold }}>{lender}</Text>
               {` paid `}
               <Text style={{ fontFamily: Font.bold }}>{lendee}</Text>
             </Text>
           </View>
+
+          {/* Date */}
           <Text
             style={{
               fontFamily: Font.regular,
@@ -83,9 +97,13 @@ const Transaction = ({ lender, lendee, amount, date }: ITransaction) => {
             {new Date(JSON.parse(date)).toLocaleDateString()}
           </Text>
         </View>
-        <Text
-          style={{ fontFamily: Font.bold, fontSize: 16 }}
-        >{`$${amount}`}</Text>
+
+        <View>
+          {/* Amount */}
+          <Text
+            style={{ fontFamily: Font.bold, fontSize: 16 }}
+          >{`$${amount}`}</Text>
+        </View>
       </View>
     </View>
   );

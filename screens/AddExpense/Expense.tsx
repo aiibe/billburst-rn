@@ -32,6 +32,7 @@ export default function Expense() {
         lendee: "Suly", // [!] Lendees must be array of users
         amount: howMuchParsed,
         date: JSON.stringify(new Date()),
+        description: whatFor,
       })
     );
   };
