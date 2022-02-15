@@ -16,12 +16,11 @@ export default function Overview({
 }: NativeStackScreenProps<RootStackParamsList, "Overview">) {
   const { transactions } = useSelector((state: RootState) => state);
   const groups = groupTransactions(transactions);
-  const oweAmount = groups.reduce(
-    (total, transaction) => (total += transaction[1]),
-    0
-  );
-  const isOwe = oweAmount < 0;
-  const oweAmountAbs = Math.abs(oweAmount);
+
+  // Get total amount owe/lend for current user 'You'
+  const totalOweAmount = groups.reduce((total, t) => (total += t[1]), 0);
+  const isOwe = totalOweAmount < 0;
+  const totalOweAmountAbs = Math.abs(totalOweAmount);
 
   return (
     <View
@@ -57,7 +56,7 @@ export default function Overview({
             color: isOwe ? Color.dangerous : Color.primary,
           }}
         >
-          {`You ${isOwe ? "owe" : "lend"} $${oweAmountAbs}`}
+          {`You ${isOwe ? "owe" : "lend"} $${totalOweAmountAbs}`}
         </Text>
       </View>
 
