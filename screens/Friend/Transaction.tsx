@@ -14,7 +14,6 @@ export default function Transaction({
   // [!] Date is transformed at render => optimize with useMemo or use useCallback?
 
   const owed = equalSplit ? amount / lendees.length + 1 : amount;
-  const totalOwed = lender === "You" ? amount : owed;
 
   return (
     <View
@@ -73,7 +72,7 @@ export default function Transaction({
               fontSize: 16,
               color: lender !== "You" ? Color.dangerous : Color.primary,
             }}
-          >{`$${totalOwed}`}</Text>
+          >{`$${owed}`}</Text>
         </View>
       </View>
     </View>
