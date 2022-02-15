@@ -1,12 +1,17 @@
 import { ISingleTransaction, ITransaction } from "../redux/types/transaction";
 
-// Split transactions from grouped/raw transactions
+/**
+ * Split transactions from grouped/raw transactions
+ * @param rawTransactions Grouped or raw transactions from source
+ * @returns Array of transactions split
+ */
 export function burstTransactions(rawTransactions: ITransaction[]) {
   return rawTransactions.reduce(
     (
       acc: ISingleTransaction[],
       { lender, lendees, amount, equalSplit, ...rest }
     ) => {
+      // [!] equalSplit among lendees only, not including 'You' ?
       const paid = equalSplit
         ? Math.round((amount / (lendees.length + 1)) * 100) / 100
         : amount;
@@ -19,14 +24,11 @@ export function burstTransactions(rawTransactions: ITransaction[]) {
   );
 }
 
-// Group all transaction that include You
-export function groupTransactions(transactions: ITransaction[]) {
-  return burstTransactions(transactions).filter(
-    ({ lender, lendee }) => lender === "You" || lendee === "You"
-  );
-}
-
-// Sum transactions that includes You into tuples like ['Sarah', -45]
+/**
+ * Sum transactions into tuples
+ * @param transactions
+ * @returns [ ['Sarah', -5], ...]
+ */
 export function sumTransactions(transactions: ISingleTransaction[]) {
   const peers = new Set();
   return transactions

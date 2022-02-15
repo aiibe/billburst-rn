@@ -5,7 +5,7 @@ import { useSelector } from "react-redux";
 import Title from "../../components/Title";
 import Color from "../../enum/Color";
 import Font from "../../enum/Font";
-import { groupTransactions, sumTransactions } from "../../helpers";
+import { burstTransactions, sumTransactions } from "../../helpers";
 import { RootState } from "../../redux/store";
 import { RootStackParamsList } from "../types/Navigation";
 import FriendList from "./FriendList";
@@ -14,10 +14,19 @@ export default function Overview({
   navigation: { navigate },
 }: NativeStackScreenProps<RootStackParamsList, "Overview">) {
   const { transactions } = useSelector((state: RootState) => state);
-  const groups = groupTransactions(transactions);
-  const summary = sumTransactions(groups);
 
-  // Get total amount owe/lend for current user 'You'
+  // Get spread transactions from raw transactions
+  const spreadTransactions = burstTransactions(transactions);
+
+  // Filter only transactions that included 'You'
+  const myTransactions = spreadTransactions.filter(
+    ({ lender, lendee }) => lender === "You" || lendee === "You"
+  );
+
+  // Sums up amount owe/lent for each peer
+  const summary = sumTransactions(myTransactions);
+
+  // Get total amount owe/lend for 'You'
   const totalOweAmount = summary.reduce((total, t) => (total += t[1]), 0);
   const isOwe = totalOweAmount < 0;
   const totalOweAmountAbs = Math.round(Math.abs(totalOweAmount) * 100) / 100;
