@@ -6,7 +6,11 @@ import Font from "../../enum/Font";
 import { setNewTransaction } from "../../redux/reducers/transaction";
 import Friends from "./Friends";
 
-export default function Expense() {
+interface IExpenseProps {
+  goBack: () => void;
+}
+
+export default function Expense({ goBack }: IExpenseProps) {
   const [users, setUsers] = useState([{ name: "You" }]);
   const [whoPay, setWhoPay] = useState("You");
   const [whatFor, setWhatFor] = useState("");
@@ -35,6 +39,8 @@ export default function Expense() {
         description: whatFor,
       })
     );
+
+    goBack();
   };
 
   return (

@@ -16,7 +16,7 @@ export default function AddExpense({
           backgroundColor: "white",
         }}
       >
-        <Expense />
+        <Expense goBack={() => goBack()} />
       </View>
     </TouchableWithoutFeedback>
   );
