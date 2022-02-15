@@ -1,9 +1,8 @@
 import { ScrollView } from "react-native";
-import { IGroupTransaction } from "../../helpers";
 import Friend from "./Friend";
 
 interface IFriendListProps {
-  transactions: IGroupTransaction[];
+  transactions: [string, number][];
 }
 
 const FriendList = ({ transactions }: IFriendListProps) => {

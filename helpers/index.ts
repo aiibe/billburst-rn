@@ -1,27 +1,49 @@
-import { ITransaction } from "../redux/types/transaction";
+import { ISingleTransaction, ITransaction } from "../redux/types/transaction";
 
-export interface IGroupTransaction {
-  0: string;
-  1: number;
+// Split transactions from grouped/raw transactions
+export function burstTransactions(rawTransactions: ITransaction[]) {
+  return rawTransactions.reduce(
+    (
+      acc: ISingleTransaction[],
+      { lender, lendees, amount, equalSplit, ...rest }
+    ) => {
+      const paid = equalSplit
+        ? Math.round((amount / lendees.length) * 100) / 100
+        : amount;
+      lendees.forEach((lendee) =>
+        acc.push({ lender, paid, lendee, equalSplit, ...rest })
+      );
+      return acc;
+    },
+    []
+  );
 }
 
-// Group and sum transactions into tuples like ['Sarah', -45]
-export const groupTransactions = (transactions: ITransaction[]) => {
+// Group all transaction that include You
+export function groupTransactions(transactions: ITransaction[]) {
+  return burstTransactions(transactions).filter(
+    ({ lender, lendee }) => lender === "You" || lendee === "You"
+  );
+}
+
+// Sum transactions that includes You into tuples like ['Sarah', -45]
+export function sumTransactions(transactions: ISingleTransaction[]) {
+  const peers = new Set();
   return transactions
-    .reduce((acc: IGroupTransaction[], transaction: ITransaction) => {
-      transaction.lender === "You"
-        ? acc.push([transaction.lendee, transaction.amount])
-        : acc.push([transaction.lender, -transaction.amount]);
-      return acc;
-    }, [])
-    .reduce((acc: IGroupTransaction[], transaction: IGroupTransaction) => {
-      const members = new Set(acc.map((t) => t[0]));
-      if (members.has(transaction[0])) {
-        const slot = acc.findIndex((t) => t[0] === transaction[0]);
-        acc[slot] = [acc[slot][0], acc[slot][1] + transaction[1]];
-      } else {
+    .map(({ lender, lendee, paid }) => {
+      return lendee === "You" ? [lender, -paid] : [lendee, paid];
+    })
+    .reduce((acc: [string, number][], transaction: any) => {
+      const lender = transaction[0];
+      const amount = transaction[1];
+
+      if (!peers.has(lender)) {
+        peers.add(lender);
         acc.push(transaction);
+      } else {
+        const idx = acc.findIndex((a) => a[0] === lender);
+        acc[idx] = [acc[idx][0], acc[idx][1] + amount];
       }
       return acc;
     }, []);
-};
+}

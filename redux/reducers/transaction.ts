@@ -4,17 +4,27 @@ import { ITransaction } from "../types/transaction";
 const initialState: ITransaction[] = [
   {
     lender: "You",
-    lendee: "Sarah",
+    lendees: ["Sarah", "James"],
     amount: 34,
     date: JSON.stringify(new Date(2021, 7, 12)),
     description: "Fast food",
+    equalSplit: true,
   },
   {
     lender: "Sarah",
-    lendee: "You",
-    amount: 90,
+    lendees: ["You", "James"],
+    amount: 57,
     date: JSON.stringify(new Date(2021, 7, 12)),
     description: "Fast food",
+    equalSplit: true,
+  },
+  {
+    lender: "Sarah",
+    lendees: ["You"],
+    amount: 90,
+    date: JSON.stringify(new Date(2021, 7, 12)),
+    description: "Car repair",
+    equalSplit: false,
   },
   // {
   //   lender: "Sarah",

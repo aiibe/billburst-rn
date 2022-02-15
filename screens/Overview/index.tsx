@@ -1,4 +1,3 @@
-import { useNavigation } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import React from "react";
 import { Pressable, Text, View } from "react-native";
@@ -6,7 +5,7 @@ import { useSelector } from "react-redux";
 import Title from "../../components/Title";
 import Color from "../../enum/Color";
 import Font from "../../enum/Font";
-import { groupTransactions } from "../../helpers";
+import { groupTransactions, sumTransactions } from "../../helpers";
 import { RootState } from "../../redux/store";
 import { RootStackParamsList } from "../types/Navigation";
 import FriendList from "./FriendList";
@@ -16,9 +15,10 @@ export default function Overview({
 }: NativeStackScreenProps<RootStackParamsList, "Overview">) {
   const { transactions } = useSelector((state: RootState) => state);
   const groups = groupTransactions(transactions);
+  const summary = sumTransactions(groups);
 
   // Get total amount owe/lend for current user 'You'
-  const totalOweAmount = groups.reduce((total, t) => (total += t[1]), 0);
+  const totalOweAmount = summary.reduce((total, t) => (total += t[1]), 0);
   const isOwe = totalOweAmount < 0;
   const totalOweAmountAbs = Math.abs(totalOweAmount);
 
@@ -60,7 +60,7 @@ export default function Overview({
         </Text>
       </View>
 
-      <FriendList transactions={groups} />
+      <FriendList transactions={summary} />
     </View>
   );
 }
