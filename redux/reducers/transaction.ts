@@ -19,8 +19,8 @@ const initialState: ITransaction[] = [
     equalSplit: true,
   },
   {
-    lender: "Sarah",
-    lendees: ["You"],
+    lender: "Jim",
+    lendees: ["You", "Mike"],
     amount: 90,
     date: JSON.stringify(new Date(2021, 11, 4)),
     description: "Car repair",

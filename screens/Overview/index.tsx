@@ -19,8 +19,8 @@ export default function Overview({
   const spreadTransactions = burstTransactions(transactions);
 
   // Filter only transactions that included 'You'
-  const myTransactions = spreadTransactions.filter(
-    ({ lender, lendee }) => lender === "You" || lendee === "You"
+  const myTransactions = spreadTransactions.filter(({ lender, lendee }) =>
+    [lender, lendee].includes("You")
   );
 
   // Sums up amount owe/lent for each peer
