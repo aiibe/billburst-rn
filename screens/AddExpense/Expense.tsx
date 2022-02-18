@@ -37,7 +37,6 @@ export default function Expense({ goBack }: IExpenseProps) {
     const howMuchParsed = parseFloat(howMuch.replace(/,/g, "."));
     const lendees: string[] = users.filter((name) => name !== whoPay);
 
-    // [!] missing equalSplit ?
     dispatch(
       setNewTransaction({
         lender: whoPay,

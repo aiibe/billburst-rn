@@ -65,7 +65,7 @@ export default function Overview({
             color: isOwe ? Color.dangerous : Color.primary,
           }}
         >
-          {`You ${isOwe ? "owe" : "lend"} $${totalOweAmountAbs}`}
+          {`You ${isOwe ? "owe" : "lent"} $${totalOweAmountAbs}`}
         </Text>
       </View>
 
