@@ -6,17 +6,18 @@ import Color from "../../enum/Color";
 import Font from "../../enum/Font";
 import { RootStackParamsList } from "../types/Navigation";
 
-interface IFriendProps {
+interface IPeerProps {
   transaction: [string, number];
 }
 
 interface IOverviewScreenProps
   extends NativeStackNavigationProp<RootStackParamsList, "Overview"> {}
 
-const Friend = ({ transaction }: IFriendProps) => {
+const Peer = ({ transaction }: IPeerProps) => {
   const { navigate } = useNavigation<IOverviewScreenProps>();
   const friend = transaction[0];
   const amount = transaction[1];
+  const oweLent = "$" + Math.abs(amount);
 
   return (
     <Pressable
@@ -53,7 +54,7 @@ const Friend = ({ transaction }: IFriendProps) => {
               color: amount < 0 ? Color.dangerous : Color.primary,
             }}
           >
-            {"$" + Math.abs(amount)}
+            {oweLent}
           </Text>
         </View>
       </View>
@@ -61,4 +62,4 @@ const Friend = ({ transaction }: IFriendProps) => {
   );
 };
 
-export default Friend;
+export default Peer;

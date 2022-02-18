@@ -43,8 +43,11 @@ export const transactionsSlice = createSlice({
     setNewTransaction: (state, action: PayloadAction<ITransaction>) => {
       state.raw.push(action.payload);
     },
+    updateExpanded: (state, action: PayloadAction<ISingleTransaction[]>) => {
+      state.expanded = action.payload;
+    },
   },
 });
 
-export const { setNewTransaction } = transactionsSlice.actions;
+export const { setNewTransaction, updateExpanded } = transactionsSlice.actions;
 export default transactionsSlice.reducer;

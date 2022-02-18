@@ -1,35 +1,42 @@
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import React from "react";
-import { Pressable, Text, View } from "react-native";
-import { useSelector } from "react-redux";
+import { useEffect } from "react";
+import { Pressable, Text, View, ScrollView } from "react-native";
+import { useDispatch, useSelector } from "react-redux";
 import Title from "../../components/Title";
 import Color from "../../enum/Color";
 import Font from "../../enum/Font";
 import { burstTransactions, sumTransactions } from "../../helpers";
+import { updateExpanded } from "../../redux/reducers/transactions";
 import { RootState } from "../../redux/store";
 import { RootStackParamsList } from "../types/Navigation";
-import FriendList from "./FriendList";
+import Peer from "./Peer";
 
 export default function Overview({
   navigation: { navigate },
 }: NativeStackScreenProps<RootStackParamsList, "Overview">) {
   const {
-    transactions: { raw },
+    transactions: { raw, expanded },
   } = useSelector((state: RootState) => state);
+  const dispatch = useDispatch();
 
-  // Get spread transactions from raw transactions
-  const spreadTransactions = burstTransactions(raw);
+  useEffect(() => {
+    // Updated expanded transactions everytime raw transactions updated
+    dispatch(updateExpanded(burstTransactions(raw)));
+  }, [raw]);
+
+  // Wait until updateExpanded finishes
+  if (!expanded.length) return null;
 
   // Filter only transactions that included 'You'
-  const myTransactions = spreadTransactions.filter(({ lender, lendee }) =>
+  const myTransactions = expanded.filter(({ lender, lendee }) =>
     [lender, lendee].includes("You")
   );
 
   // Sums up amount owe/lent for each peer
-  const summary = sumTransactions(myTransactions);
+  const peers = sumTransactions(myTransactions);
 
   // Get total amount owe/lend for 'You'
-  const totalOweAmount = summary.reduce((total, t) => (total += t[1]), 0);
+  const totalOweAmount = peers.reduce((total, t) => (total += t[1]), 0);
   const isOwe = totalOweAmount < 0;
   const totalOweAmountAbs = Math.round(Math.abs(totalOweAmount) * 100) / 100;
 
@@ -71,7 +78,11 @@ export default function Overview({
         </Text>
       </View>
 
-      <FriendList transactions={summary} />
+      <ScrollView style={{ flexGrow: 1 }} showsVerticalScrollIndicator={false}>
+        {peers.map((transaction, idx) => (
+          <Peer key={idx} transaction={transaction} />
+        ))}
+      </ScrollView>
     </View>
   );
 }
