@@ -13,10 +13,12 @@ import FriendList from "./FriendList";
 export default function Overview({
   navigation: { navigate },
 }: NativeStackScreenProps<RootStackParamsList, "Overview">) {
-  const { transactions } = useSelector((state: RootState) => state);
+  const {
+    transactions: { raw },
+  } = useSelector((state: RootState) => state);
 
   // Get spread transactions from raw transactions
-  const spreadTransactions = burstTransactions(transactions);
+  const spreadTransactions = burstTransactions(raw);
 
   // Filter only transactions that included 'You'
   const myTransactions = spreadTransactions.filter(({ lender, lendee }) =>

@@ -1,4 +1,4 @@
-import { ISingleTransaction, ITransaction } from "../redux/types/transaction";
+import { ISingleTransaction, ITransaction } from "../redux/types/transactions";
 
 /**
  * Split transactions from grouped/raw transactions

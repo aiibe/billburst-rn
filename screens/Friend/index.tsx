@@ -11,11 +11,13 @@ export default function Friend({
   navigation,
 }: NativeStackScreenProps<RootStackParamsList, "Friend">) {
   const { name } = route.params;
-  const { transactions } = useSelector((state: RootState) => state);
+  const {
+    transactions: { raw },
+  } = useSelector((state: RootState) => state);
 
   // Filter transactions included 'You' and current peer
   // Sort descending
-  const withFriend = transactions
+  const withFriend = raw
     .filter(
       ({ lendees, lender }) =>
         lender === name || (lendees.includes(name) && lender === "You")

@@ -3,7 +3,7 @@ import { Pressable, Text, TextInput, View } from "react-native";
 import { useDispatch } from "react-redux";
 import Color from "../../enum/Color";
 import Font from "../../enum/Font";
-import { setNewTransaction } from "../../redux/reducers/transaction";
+import { setNewTransaction } from "../../redux/reducers/transactions";
 import Friends from "./Friends";
 
 interface IExpenseProps {
