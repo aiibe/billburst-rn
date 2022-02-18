@@ -23,16 +23,13 @@ export default function Overview({
     dispatch(updateExpanded(burstTransactions(raw)));
   }, [raw]);
 
-  // Wait until updateExpanded finishes
-  if (!expanded.length) return null;
-
-  // Filter only transactions that included 'You'
-  const myTransactions = expanded.filter(({ lender, lendee }) =>
-    [lender, lendee].includes("You")
-  );
-
-  // Sums up amount owe/lent for each peer
-  const peers = sumTransactions(myTransactions);
+  const peers: [string, number][] = !expanded.length
+    ? []
+    : sumTransactions(
+        expanded.filter(({ lender, lendee }) =>
+          [lender, lendee].includes("You")
+        )
+      );
 
   return (
     <View
