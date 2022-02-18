@@ -55,15 +55,6 @@ const Friend = ({ transaction }: IFriendProps) => {
           >
             {"$" + Math.abs(amount)}
           </Text>
-          <Text
-            style={{
-              marginLeft: 10,
-              fontFamily: Font.bold,
-              fontSize: 20,
-            }}
-          >
-            {">"}
-          </Text>
         </View>
       </View>
     </Pressable>
