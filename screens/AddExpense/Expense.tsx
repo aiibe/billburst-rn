@@ -25,7 +25,7 @@ export default function Expense({ goBack }: IExpenseProps) {
 
   // [1] Check `howMuch` type. Must parse it to number.
   const validForm: () => boolean = () => {
-    if (whatFor.length && howMuch.length && whoPay.length) {
+    if (whatFor.length && parseFloat(howMuch) > 0 && whoPay.length) {
       if (!isNaN(parseFloat(howMuch))) return true;
     }
     return false;
