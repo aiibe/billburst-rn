@@ -43,7 +43,7 @@ export default function Friend({
       <ScrollView>
         <View style={{ height: 20 }} />
         {withFriend.map((transaction, i) => (
-          <Transaction key={i} {...transaction} />
+          <Transaction key={i} data={transaction} />
         ))}
       </ScrollView>
     </View>

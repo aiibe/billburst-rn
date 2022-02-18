@@ -49,3 +49,21 @@ export function sumTransactions(transactions: ISingleTransaction[]) {
       return acc;
     }, []);
 }
+
+/**
+ * Add details to transaction
+ * @param transaction
+ * @returns transactions with details
+ */
+export function dissectTransaction(transaction: ITransaction) {
+  const { equalSplit, lender, lendees, amount, ...rest } = transaction;
+  const members = [...lendees, lender];
+  const divisor = equalSplit ? members.length : lendees.length;
+  const paid = Math.round((amount / divisor) * 100) / 100;
+  const details = members.map((member) => {
+    return !equalSplit && member === lender
+      ? { name: member, amount }
+      : { name: member, amount: -paid };
+  });
+  return { ...transaction, details };
+}

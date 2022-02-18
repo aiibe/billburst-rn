@@ -10,10 +10,16 @@ interface IExpenseProps {
   goBack: () => void;
 }
 
+const splitOptions = [
+  { key: "Evenly", value: true },
+  { key: "Fully", value: false },
+];
+
 export default function Expense({ goBack }: IExpenseProps) {
   const [users, setUsers] = useState(["You"]);
   const [whoPay, setWhoPay] = useState("You");
   const [whatFor, setWhatFor] = useState("");
+  const [equalSplit, setEqualSplit] = useState(true);
   const [howMuch, setHowMuch] = useState(""); // [1] Must be number type.
   const dispatch = useDispatch();
 
@@ -39,7 +45,7 @@ export default function Expense({ goBack }: IExpenseProps) {
         amount: howMuchParsed,
         date: JSON.stringify(new Date()),
         description: whatFor,
-        equalSplit: true,
+        equalSplit,
       })
     );
 
@@ -96,6 +102,45 @@ export default function Expense({ goBack }: IExpenseProps) {
             fontSize: 18,
           }}
         />
+      </View>
+
+      <View style={{ marginBottom: 20 }}>
+        <Label title="How to split ?" />
+        <View
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "space-between",
+          }}
+        >
+          {splitOptions.map(({ key, value }) => (
+            <Pressable
+              key={key}
+              onPress={() => setEqualSplit(value)}
+              style={{
+                flex: 1,
+                backgroundColor:
+                  value === equalSplit ? Color.primary : Color.grayLight,
+                paddingHorizontal: 15,
+                paddingVertical: 5,
+                borderRadius: 10,
+                marginRight: 10,
+                marginBottom: 5,
+              }}
+            >
+              <Text
+                style={{
+                  fontSize: 18,
+                  color: value === equalSplit ? "white" : "black",
+                  fontFamily: Font.bold,
+                  textAlign: "center",
+                }}
+              >
+                {key}
+              </Text>
+            </Pressable>
+          ))}
+        </View>
       </View>
 
       {/* <View style={{ marginBottom: 20 }}>

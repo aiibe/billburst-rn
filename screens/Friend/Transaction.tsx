@@ -1,20 +1,21 @@
 import { Text, View } from "react-native";
 import Color from "../../enum/Color";
 import Font from "../../enum/Font";
+import { dissectTransaction } from "../../helpers";
 import { ITransaction } from "../../redux/types/transaction";
 
-export default function Transaction({
-  lender,
-  lendees,
-  amount,
-  date,
-  description,
-  equalSplit,
-}: ITransaction) {
+interface ITransactionProps {
+  data: ITransaction;
+}
+
+export default function Transaction({ data }: ITransactionProps) {
   // [!] Date is transformed at render => optimize with useMemo or use useCallback?
 
-  const owe = equalSplit ? amount / (lendees.length + 1) : amount;
-  const owed = Math.round(owe * 100) / 100;
+  const { description, equalSplit, lender, lendees, amount, date, details } =
+    dissectTransaction(data);
+
+  const divisor = equalSplit ? lendees.length + 1 : lendees.length;
+  const owed = Math.round((amount / divisor) * 100) / 100;
 
   return (
     <View
@@ -37,20 +38,27 @@ export default function Transaction({
         <View>
           {/* Description */}
           <Text style={{ fontFamily: Font.bold, fontSize: 18 }}>
-            {description}
+            {description}{" "}
+            <Text style={{ fontFamily: Font.regular }}>
+              ({equalSplit ? "evenly" : "fully"})
+            </Text>
           </Text>
 
           {/* Transaction */}
-          <Text style={{ fontFamily: Font.regular, fontSize: 16 }}>
-            <Text style={{ fontFamily: Font.bold }}>{lender}</Text>
-            {` paid `}
-            <Text style={{ fontFamily: Font.bold }}>${amount}</Text>
-          </Text>
-
-          {/* lendees */}
           <View style={{ marginBottom: 5 }}>
-            {lendees.map((lendee) => (
-              <Text key={lendee}>{`-- ${lendee} owed $${owed}`}</Text>
+            <Text style={{ fontFamily: Font.regular, fontSize: 16 }}>
+              <Text style={{ fontFamily: Font.bold }}>{lender}</Text>
+              {` paid `}
+              <Text style={{ fontFamily: Font.bold }}>${amount}</Text>
+            </Text>
+          </View>
+
+          {/* Sub transactions */}
+          <View style={{ marginBottom: 10 }}>
+            {details.map(({ name, amount }) => (
+              <Text key={name}>{`${name} ${
+                amount < 0 ? "owed" : "lent"
+              } $${Math.abs(amount)}`}</Text>
             ))}
           </View>
 
