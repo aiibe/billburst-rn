@@ -2,7 +2,7 @@ import { Text, View } from "react-native";
 import Color from "../../enum/Color";
 import Font from "../../enum/Font";
 import { dissectTransaction } from "../../helpers";
-import { ITransaction } from "../../redux/types/transaction";
+import { ITransaction } from "../../redux/types/transactions";
 
 interface ITransactionProps {
   data: ITransaction;

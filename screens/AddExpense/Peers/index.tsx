@@ -1,33 +1,32 @@
 import { useState } from "react";
-import { View, Pressable, Text } from "react-native";
-import Color from "../../enum/Color";
-import Font from "../../enum/Font";
-import AddFriend from "./AddFriend";
+import { Pressable, Text, View } from "react-native";
+import Color from "../../../enum/Color";
+import Font from "../../../enum/Font";
+import Add from "./Add";
 
-interface IFriendsProps {
-  users: string[];
-  selected: string;
-  changeUser: (name: string) => void;
-  addUser: (name: string) => void;
+interface IPeersProps {
+  peers: string[];
+  lender: string;
+  setLender: (name: string) => void;
+  addPeer: (name: string) => void;
 }
 
-export default function Friends({
-  users,
-  selected,
-  changeUser,
-  addUser,
-}: IFriendsProps) {
+export default function Peers({
+  peers,
+  lender,
+  setLender,
+  addPeer,
+}: IPeersProps) {
   const [editing, setEditing] = useState(false);
 
   return (
     <View style={{ display: "flex", flexDirection: "row", flexWrap: "wrap" }}>
-      {users.map((name, idx) => (
+      {peers.map((name, idx) => (
         <Pressable
           key={idx}
-          onPress={() => changeUser(name)}
+          onPress={() => setLender(name)}
           style={{
-            backgroundColor:
-              selected === name ? Color.primary : Color.grayLight,
+            backgroundColor: lender === name ? Color.primary : Color.grayLight,
             paddingHorizontal: 15,
             paddingVertical: 5,
             borderRadius: 10,
@@ -38,7 +37,7 @@ export default function Friends({
           <Text
             style={{
               fontSize: 18,
-              color: selected === name ? "white" : "black",
+              color: lender === name ? "white" : "black",
               fontFamily: Font.bold,
             }}
           >
@@ -46,8 +45,8 @@ export default function Friends({
           </Text>
         </Pressable>
       ))}
-      <AddFriend
-        submit={addUser}
+      <Add
+        submit={addPeer}
         editing={editing}
         toggle={() => setEditing(!editing)}
       />
