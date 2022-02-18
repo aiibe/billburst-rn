@@ -1,14 +1,13 @@
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useEffect } from "react";
-import { Pressable, Text, View, ScrollView } from "react-native";
+import { Pressable, ScrollView, Text, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import Title from "../../components/Title";
-import Color from "../../enum/Color";
-import Font from "../../enum/Font";
 import { burstTransactions, sumTransactions } from "../../helpers";
 import { updateExpanded } from "../../redux/reducers/transactions";
 import { RootState } from "../../redux/store";
 import { RootStackParamsList } from "../types/Navigation";
+import Balance from "./Balance";
 import Peer from "./Peer";
 
 export default function Overview({
@@ -35,11 +34,6 @@ export default function Overview({
   // Sums up amount owe/lent for each peer
   const peers = sumTransactions(myTransactions);
 
-  // Get total amount owe/lend for 'You'
-  const totalOweAmount = peers.reduce((total, t) => (total += t[1]), 0);
-  const isOwe = totalOweAmount < 0;
-  const totalOweAmountAbs = Math.round(Math.abs(totalOweAmount) * 100) / 100;
-
   return (
     <View
       style={{
@@ -56,28 +50,10 @@ export default function Overview({
         </Pressable>
       </Title>
 
-      <View
-        style={{
-          backgroundColor: isOwe ? Color.dangerousLight : Color.warningLight,
-          padding: 20,
-          borderRadius: 15,
-          marginBottom: 20,
-        }}
-      >
-        <Text style={{ fontFamily: Font.regular, fontSize: 18 }}>
-          Total balance
-        </Text>
-        <Text
-          style={{
-            fontFamily: Font.bold,
-            fontSize: 22,
-            color: isOwe ? Color.dangerous : Color.primary,
-          }}
-        >
-          {`You ${isOwe ? "owe" : "lent"} $${totalOweAmountAbs}`}
-        </Text>
-      </View>
+      {/* Your balance with total amount owe/lent */}
+      <Balance transactions={peers} />
 
+      {/* List of friends with total amount you owe/lent each */}
       <ScrollView style={{ flexGrow: 1 }} showsVerticalScrollIndicator={false}>
         {peers.map((transaction, idx) => (
           <Peer key={idx} transaction={transaction} />
