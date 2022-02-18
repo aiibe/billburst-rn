@@ -1,19 +1,15 @@
 import { useState } from "react";
 import { Pressable, Text, TextInput, View } from "react-native";
-import Color from "../../enum/Color";
-import Font from "../../enum/Font";
+import Color from "../../../enum/Color";
+import Font from "../../../enum/Font";
 
-interface IAddFriendProps {
+interface IAddProps {
   toggle: () => void;
   editing: boolean;
   submit: (name: string) => void;
 }
 
-export default function AddFriend({
-  editing,
-  toggle,
-  submit,
-}: IAddFriendProps) {
+export default function Add({ editing, toggle, submit }: IAddProps) {
   const [friendName, setFriendName] = useState("");
 
   const handleSubmit = () => {
