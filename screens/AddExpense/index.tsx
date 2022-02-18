@@ -28,9 +28,8 @@ export default function AddExpense({
   const dispatch = useDispatch();
 
   const validForm: () => boolean = () => {
-    if (whatFor.length && parseFloat(howMuch) > 0 && whoPay.length) {
-      if (!isNaN(parseFloat(howMuch))) return true;
-    }
+    if (whatFor.length && !isNaN(parseFloat(howMuch)) && whoPay.length)
+      return parseFloat(howMuch) > 0;
     return false;
   };
 
