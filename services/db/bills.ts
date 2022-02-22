@@ -6,6 +6,7 @@ interface IAddNewBillParams {
   _publisher: string;
   _equalSplit: boolean;
   _lendees: string[];
+  _lender: string;
 }
 
 export async function addNewBill(params: IAddNewBillParams) {
