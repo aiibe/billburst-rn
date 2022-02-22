@@ -1,6 +1,12 @@
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useEffect } from "react";
-import { Pressable, ScrollView, Text, View } from "react-native";
+import {
+  Pressable,
+  ScrollView,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import Title from "../../components/Title";
 import { burstTransactions, sumTransactions } from "../../helpers";
@@ -31,6 +37,8 @@ export default function Overview({
         )
       );
 
+  const handleTest = async () => {};
+
   return (
     <View
       style={{
@@ -49,6 +57,23 @@ export default function Overview({
 
       {/* Your balance with total amount owe/lent */}
       <Balance transactions={peers} />
+
+      <TouchableOpacity
+        onPress={handleTest}
+        style={{
+          backgroundColor: "yellow",
+          paddingVertical: 20,
+        }}
+      >
+        <Text
+          style={{
+            textAlign: "center",
+            fontWeight: "bold",
+          }}
+        >
+          Test button
+        </Text>
+      </TouchableOpacity>
 
       {/* List of friends with total amount you owe/lent each */}
       <ScrollView style={{ flexGrow: 1 }} showsVerticalScrollIndicator={false}>
