@@ -8,30 +8,30 @@ interface IInitialState {
 
 const initialState: IInitialState = {
   raw: [
-    {
-      lender: "You",
-      lendees: ["Sarah", "James"],
-      amount: 34,
-      date: JSON.stringify(new Date(2021, 7, 12)),
-      description: "Concert",
-      equalSplit: true,
-    },
-    {
-      lender: "Sarah",
-      lendees: ["You", "James"],
-      amount: 57,
-      date: JSON.stringify(new Date(2021, 7, 12)),
-      description: "Fast food",
-      equalSplit: true,
-    },
-    {
-      lender: "Jim",
-      lendees: ["You", "Mike"],
-      amount: 90,
-      date: JSON.stringify(new Date(2021, 11, 4)),
-      description: "Car repair",
-      equalSplit: false,
-    },
+    // {
+    //   lender: "You",
+    //   lendees: ["Sarah", "James"],
+    //   amount: 34,
+    //   date: JSON.stringify(new Date(2021, 7, 12)),
+    //   description: "Concert",
+    //   equalSplit: true,
+    // },
+    // {
+    //   lender: "Sarah",
+    //   lendees: ["You", "James"],
+    //   amount: 57,
+    //   date: JSON.stringify(new Date(2021, 7, 12)),
+    //   description: "Fast food",
+    //   equalSplit: true,
+    // },
+    // {
+    //   lender: "Jim",
+    //   lendees: ["You", "Mike"],
+    //   amount: 90,
+    //   date: JSON.stringify(new Date(2021, 11, 4)),
+    //   description: "Car repair",
+    //   equalSplit: false,
+    // },
   ],
   expanded: [],
 };

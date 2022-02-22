@@ -63,72 +63,75 @@ export default function AddExpense({
           backgroundColor: "white",
         }}
       >
-        <View style={{ marginTop: 10 }}>
-          {/* Who pay */}
-          <View style={{ marginBottom: 20 }}>
-            <Label title="Who pays ?" />
-            <Peers
-              peers={peers}
-              lender={whoPay}
-              setLender={(name) => setWhoPay(name)}
-              addPeer={(name) => setPeers((peers) => [...peers, name])}
-            />
-          </View>
+        <View
+          style={{
+            marginTop: 10,
+            flex: 1,
+            display: "flex",
+            justifyContent: "space-between",
+          }}
+        >
+          <View>
+            {/* Who pay */}
+            <View style={{ marginBottom: 20 }}>
+              <Label title="Who pays ?" />
+              <Peers
+                peers={peers}
+                lender={whoPay}
+                setLender={(name) => setWhoPay(name)}
+                addPeer={(name) => setPeers((peers) => [...peers, name])}
+              />
+            </View>
 
-          {/* What for */}
-          <View style={{ marginBottom: 20 }}>
-            <Label title="What for ?" />
-            <TextInput
-              value={whatFor}
-              onChangeText={setWhatFor}
-              style={{
-                borderWidth: 1,
-                borderColor: Color.darkLight,
-                borderRadius: 10,
-                height: 45,
-                paddingHorizontal: 10,
-                fontFamily: Font.bold,
-                fontSize: 18,
-              }}
-            />
-          </View>
+            {/* What for */}
+            <View style={{ marginBottom: 20 }}>
+              <Label title="What for ?" />
+              <TextInput
+                value={whatFor}
+                onChangeText={setWhatFor}
+                style={{
+                  borderWidth: 1,
+                  borderColor: Color.darkLight,
+                  borderRadius: 10,
+                  height: 45,
+                  paddingHorizontal: 10,
+                  fontFamily: Font.bold,
+                  fontSize: 18,
+                }}
+              />
+            </View>
 
-          {/* How much */}
-          <View style={{ marginBottom: 20 }}>
-            <Label title="How much ?" />
-            <TextInput
-              value={howMuch}
-              keyboardType="decimal-pad"
-              onChangeText={setHowMuch}
-              style={{
-                borderWidth: 1,
-                borderColor: Color.darkLight,
-                borderRadius: 10,
-                height: 45,
-                paddingHorizontal: 10,
-                fontFamily: Font.bold,
-                fontSize: 18,
-              }}
-            />
-          </View>
+            {/* How much */}
+            <View style={{ marginBottom: 20 }}>
+              <Label title="How much ?" />
+              <TextInput
+                value={howMuch}
+                keyboardType="decimal-pad"
+                onChangeText={setHowMuch}
+                style={{
+                  borderWidth: 1,
+                  borderColor: Color.darkLight,
+                  borderRadius: 10,
+                  height: 45,
+                  paddingHorizontal: 10,
+                  fontFamily: Font.bold,
+                  fontSize: 18,
+                }}
+              />
+            </View>
 
-          {/* How to split */}
-          <View style={{ marginBottom: 20 }}>
-            <Label title="How to split ?" />
-            <Split
-              onChange={(value) => setEqualSplit(value)}
-              selected={equalSplit}
-            />
+            {/* How to split */}
+            <View style={{ marginBottom: 20 }}>
+              <Label title="How to split ?" />
+              <Split
+                onChange={(value) => setEqualSplit(value)}
+                selected={equalSplit}
+              />
+            </View>
           </View>
-
-          {/* <View style={{ marginBottom: 20 }}>
-      <TouchableOpacity>
-        <Label title="Today" />
-      </TouchableOpacity>
-    </View> */}
 
           {/* Submit button */}
-          <View style={{ marginBottom: 20 }}>
+          <View style={{ marginVertical: 20 }}>
             <Pressable
               onPress={submitForm}
               disabled={!validForm()}
