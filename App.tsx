@@ -15,6 +15,7 @@ import Friend from "./screens/Friend";
 // import AddExpense from "./screens/AddExpense";
 import Overview from "./screens/Overview";
 import { RootStackParamsList } from "./screens/types/Navigation";
+import "react-native-url-polyfill/auto";
 
 // Stack
 const { Navigator, Screen, Group } =
