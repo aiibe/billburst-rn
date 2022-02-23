@@ -76,6 +76,13 @@ export function dissectTransaction(transaction: ITransaction) {
   return { ...transaction, details };
 }
 
+/**
+ * Get transactions that macth friend and current user
+ * @param transactions Raw transactions
+ * @param friendName Friend's username
+ * @param currentUser
+ * @returns Array of transactions
+ */
 export function friendTransactions(
   transactions: ITransaction[],
   friendName: string,
