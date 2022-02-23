@@ -2,6 +2,7 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useEffect } from "react";
 import { ScrollView, View } from "react-native";
 import { useSelector } from "react-redux";
+import { friendTransactions } from "../../helpers";
 import { RootState } from "../../redux/store";
 import { IUser } from "../../redux/types/transactions";
 import { RootStackParamsList } from "../types/Navigation";
@@ -17,26 +18,8 @@ export default function Friend({
     user: { currentUser },
   } = useSelector((state: RootState) => state);
 
-  // Filter transactions included 'You' and current peer
-  // Sort descending
-  const userInLendees = (lendees: IUser[], username: string | undefined) => {
-    const members = new Set();
-    lendees.forEach((user) => members.add(user.username));
-    return members.has(username);
-  };
-
-  const withFriend = raw
-    .filter(
-      ({ lendees, lender }) =>
-        lender.username === name ||
-        (userInLendees(lendees, name) &&
-          lender.username === currentUser?.username)
-    )
-    .sort(
-      (a, b) =>
-        new Date(JSON.parse(b.updated_at)).getTime() -
-        new Date(JSON.parse(a.updated_at)).getTime()
-    );
+  // Filter transactions
+  const withFriend = friendTransactions(raw, name, currentUser);
 
   useEffect(() => {
     // Set screen title

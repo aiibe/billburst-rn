@@ -1,4 +1,9 @@
-import { ISingleTransaction, ITransaction } from "../redux/types/transactions";
+import transactions from "../redux/reducers/transactions";
+import {
+  ISingleTransaction,
+  ITransaction,
+  IUser,
+} from "../redux/types/transactions";
 
 /**
  * Split transactions from grouped/raw transactions
@@ -69,4 +74,29 @@ export function dissectTransaction(transaction: ITransaction) {
       : { name: member.username, amount: -paid };
   });
   return { ...transaction, details };
+}
+
+export function friendTransactions(
+  transactions: ITransaction[],
+  friendName: string,
+  currentUser: IUser | null
+) {
+  const userInLendees = (lendees: IUser[], username: string | undefined) => {
+    const members = new Set();
+    lendees.forEach((user) => members.add(user.username));
+    return members.has(username);
+  };
+
+  return transactions
+    .filter(
+      ({ lendees, lender }) =>
+        lender.username === friendName ||
+        (userInLendees(lendees, friendName) &&
+          lender.username === currentUser?.username)
+    )
+    .sort(
+      (a, b) =>
+        new Date(JSON.parse(b.updated_at)).getTime() -
+        new Date(JSON.parse(a.updated_at)).getTime()
+    );
 }
