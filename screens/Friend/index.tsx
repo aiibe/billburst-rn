@@ -4,7 +4,6 @@ import { ScrollView, View } from "react-native";
 import { useSelector } from "react-redux";
 import { friendTransactions } from "../../helpers";
 import { RootState } from "../../redux/store";
-import { IUser } from "../../redux/types/transactions";
 import { RootStackParamsList } from "../types/Navigation";
 import Transaction from "./Transaction";
 
