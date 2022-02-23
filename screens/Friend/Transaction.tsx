@@ -2,17 +2,25 @@ import { Text, View } from "react-native";
 import Color from "../../enum/Color";
 import Font from "../../enum/Font";
 import { dissectTransaction } from "../../helpers";
-import { ITransaction } from "../../redux/types/transactions";
+import { ITransaction, IUser } from "../../redux/types/transactions";
 
 interface ITransactionProps {
   data: ITransaction;
+  currentUser: IUser | null;
 }
 
-export default function Transaction({ data }: ITransactionProps) {
+export default function Transaction({ data, currentUser }: ITransactionProps) {
   // [!] Date is transformed at render => optimize with useMemo or use useCallback?
 
-  const { description, equalSplit, lender, lendees, amount, date, details } =
-    dissectTransaction(data);
+  const {
+    description,
+    equalSplit,
+    lender,
+    lendees,
+    amount,
+    updated_at,
+    details,
+  } = dissectTransaction(data);
 
   const divisor = equalSplit ? lendees.length + 1 : lendees.length;
   const owed = Math.round((amount / divisor) * 100) / 100;
@@ -47,7 +55,7 @@ export default function Transaction({ data }: ITransactionProps) {
           {/* Transaction */}
           <View style={{ marginBottom: 5 }}>
             <Text style={{ fontFamily: Font.regular, fontSize: 16 }}>
-              <Text style={{ fontFamily: Font.bold }}>{lender}</Text>
+              <Text style={{ fontFamily: Font.bold }}>{lender.username}</Text>
               {` paid `}
               <Text style={{ fontFamily: Font.bold }}>${amount}</Text>
             </Text>
@@ -69,7 +77,7 @@ export default function Transaction({ data }: ITransactionProps) {
               fontSize: 14,
             }}
           >
-            {new Date(JSON.parse(date)).toLocaleDateString()}
+            {new Date(updated_at).toLocaleDateString()}
           </Text>
         </View>
 
@@ -79,7 +87,7 @@ export default function Transaction({ data }: ITransactionProps) {
             style={{
               fontFamily: Font.bold,
               fontSize: 16,
-              color: lender !== "You" ? Color.dangerous : Color.primary,
+              color: lender !== currentUser ? Color.dangerous : Color.primary,
             }}
           >{`$${owed}`}</Text>
         </View>

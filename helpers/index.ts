@@ -64,9 +64,9 @@ export function dissectTransaction(transaction: ITransaction) {
   const divisor = equalSplit ? members.length : lendees.length;
   const paid = Math.round((amount / divisor) * 100) / 100;
   const details = members.map((member) => {
-    return !equalSplit && member === lender
-      ? { name: member, amount }
-      : { name: member, amount: -paid };
+    return !equalSplit && member.username === lender.username
+      ? { name: member.username, amount }
+      : { name: member.username, amount: -paid };
   });
   return { ...transaction, details };
 }
