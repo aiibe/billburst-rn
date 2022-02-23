@@ -7,10 +7,9 @@ import { ISingleTransaction, ITransaction } from "../redux/types/transactions";
  */
 export function burstTransactions(rawTransactions: ITransaction[]) {
   return rawTransactions.reduce(
-    (
-      acc: ISingleTransaction[],
-      { lender, lendees, amount, equalSplit, ...rest }
-    ) => {
+    (acc: ISingleTransaction[], transaction: ITransaction) => {
+      const { lender, lendees, amount, equalSplit, ...rest } = transaction;
+
       // [!] equalSplit among lendees only, not including 'You' ?
       const paid = equalSplit
         ? Math.round((amount / (lendees.length + 1)) * 100) / 100
@@ -29,11 +28,15 @@ export function burstTransactions(rawTransactions: ITransaction[]) {
  * @param transactions
  * @returns [ ['Sarah', -5], ...]
  */
-export function sumTransactions(transactions: ISingleTransaction[]) {
+export function sumTransactions(
+  transactions: ISingleTransaction[],
+  userId: string
+) {
   const peers = new Set();
   return transactions
+    .filter(({ lender, lendee }) => [lender.id, lendee.id].includes(userId))
     .map(({ lender, lendee, paid }) =>
-      lendee === "You" ? [lender, -paid] : [lendee, paid]
+      lendee.id === userId ? [lender.username, -paid] : [lendee.username, paid]
     )
     .reduce((acc: [string, number][], transaction: any) => {
       const lender = transaction[0];

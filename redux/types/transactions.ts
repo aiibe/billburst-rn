@@ -1,18 +1,31 @@
+export interface IUser {
+  email: string;
+  username: string;
+  id: string;
+}
+
 export interface ITransaction {
-  lender: string;
-  lendees: string[];
+  lender: IUser;
+  lendees: IUser[];
   amount: number;
-  date: string;
+  created_at: string;
+  updated_at: string;
   equalSplit: boolean;
   description: string;
-  // currency
+  currency: string;
+  publisher: string;
+  id: number;
 }
 
 export interface ISingleTransaction {
-  lender: string;
-  lendee: string;
+  id: number;
+  lender: IUser;
+  lendee: IUser;
   paid: number;
-  date: string;
+  created_at: string;
+  updated_at: string;
   equalSplit: boolean;
   description: string;
+  currency: string;
+  publisher: string;
 }
