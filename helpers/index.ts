@@ -103,7 +103,6 @@ export function friendTransactions(
     )
     .sort(
       (a, b) =>
-        new Date(JSON.parse(b.updated_at)).getTime() -
-        new Date(JSON.parse(a.updated_at)).getTime()
+        new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime()
     );
 }
