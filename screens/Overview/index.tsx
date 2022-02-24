@@ -32,7 +32,7 @@ export default function Overview({
       dispatch(setTransactions(data as ITransaction[]));
     };
 
-    // fetchBills();
+    fetchBills();
   }, []);
 
   useEffect(() => {

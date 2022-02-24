@@ -1,3 +1,6 @@
+import { createAsyncThunk } from "@reduxjs/toolkit";
+import { setTransactions } from "../../redux/reducers/transactions";
+import { ITransaction } from "../../redux/types/transactions";
 import supabase from "../../supabase";
 
 interface IAddNewBillParams {
@@ -9,12 +12,22 @@ interface IAddNewBillParams {
   _lender: string;
 }
 
-export async function addNewBill(params: IAddNewBillParams) {
-  return await supabase.rpc("handle_new_bill", params);
-}
+export const addNewBill = createAsyncThunk(
+  "transactions/addNewBill",
+  async (params: IAddNewBillParams) => {
+    const { error } = await supabase.rpc<ITransaction>(
+      "handle_new_bill",
+      params
+    );
+    if (error) return console.log("addNewBill, ", error);
+
+    const { data } = await getBills();
+    return data;
+  }
+);
 
 export async function getBills() {
-  return await supabase.from("bills").select(
+  return await supabase.from<ITransaction>("bills").select(
     `*,
       lender:users!bills_publisher_fkey(*),
       lendees:users!lendees_bills(*)`

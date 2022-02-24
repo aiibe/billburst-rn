@@ -1,9 +1,11 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { addNewBill } from "../../services/db/bills";
 import { ISingleTransaction, ITransaction } from "../types/transactions";
 
 interface IInitialState {
   raw: ITransaction[];
   expanded: ISingleTransaction[];
+  loading: boolean;
 }
 
 const initialState: IInitialState = {
@@ -37,6 +39,7 @@ const initialState: IInitialState = {
     },
   ],
   expanded: [],
+  loading: false,
 };
 
 export const transactionsSlice = createSlice({
@@ -46,15 +49,23 @@ export const transactionsSlice = createSlice({
     setTransactions: (state, action: PayloadAction<ITransaction[]>) => {
       state.raw = action.payload;
     },
-    setNewTransaction: (state, action: PayloadAction<ITransaction>) => {
-      state.raw.push(action.payload);
-    },
     updateExpanded: (state, action: PayloadAction<ISingleTransaction[]>) => {
       state.expanded = action.payload;
     },
   },
+  extraReducers: ({ addCase }) => {
+    addCase(addNewBill.pending, (state) => {
+      state.loading = true;
+    });
+    addCase(addNewBill.fulfilled, (state, { payload }) => {
+      state.loading = false;
+      if (payload) state.raw = payload;
+    });
+    addCase(addNewBill.rejected, (state) => {
+      state.loading = false;
+    });
+  },
 });
 
-export const { setNewTransaction, updateExpanded, setTransactions } =
-  transactionsSlice.actions;
+export const { updateExpanded, setTransactions } = transactionsSlice.actions;
 export default transactionsSlice.reducer;
