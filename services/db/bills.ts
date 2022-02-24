@@ -29,7 +29,7 @@ export const addNewBill = createAsyncThunk(
 export async function getBills() {
   return await supabase.from<ITransaction>("bills").select(
     `*,
-      lender:users!bills_publisher_fkey(*),
+      lender:users!bills_lender_fkey(*),
       lendees:users!lendees_bills(*)`
   );
 }
