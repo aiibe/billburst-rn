@@ -68,12 +68,12 @@ export default function AddExpense({
         .map(({ id }) => id);
 
       const newBill = {
-        _lender: whoPay.id,
-        _amount: howMuchParsed,
-        _lendees: lendees,
-        _description: whatFor,
-        _publisher: currentUser?.id,
-        _equalSplit: equalSplit,
+        lender: whoPay.id,
+        amount: howMuchParsed,
+        lendees: lendees,
+        description: whatFor,
+        publisher: currentUser?.id,
+        equalSplit: equalSplit,
       };
 
       dispatch(addNewBill(newBill));
