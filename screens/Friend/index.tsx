@@ -2,6 +2,7 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useEffect } from "react";
 import { ScrollView, View } from "react-native";
 import { useSelector } from "react-redux";
+import { friendTransactions } from "../../helpers";
 import { RootState } from "../../redux/store";
 import { RootStackParamsList } from "../types/Navigation";
 import Transaction from "./Transaction";
@@ -13,20 +14,11 @@ export default function Friend({
   const { name } = route.params;
   const {
     transactions: { raw },
+    user: { currentUser },
   } = useSelector((state: RootState) => state);
 
-  // Filter transactions included 'You' and current peer
-  // Sort descending
-  const withFriend = raw
-    .filter(
-      ({ lendees, lender }) =>
-        lender === name || (lendees.includes(name) && lender === "You")
-    )
-    .sort(
-      (a, b) =>
-        new Date(JSON.parse(b.date)).getTime() -
-        new Date(JSON.parse(a.date)).getTime()
-    );
+  // Filter transactions
+  const withFriend = friendTransactions(raw, name, currentUser);
 
   useEffect(() => {
     // Set screen title
@@ -45,7 +37,7 @@ export default function Friend({
       <ScrollView>
         <View style={{ height: 20 }} />
         {withFriend.map((transaction, i) => (
-          <Transaction key={i} data={transaction} />
+          <Transaction key={i} data={transaction} currentUser={currentUser} />
         ))}
       </ScrollView>
     </View>

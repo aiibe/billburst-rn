@@ -1,5 +1,5 @@
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Keyboard,
   Pressable,
@@ -8,11 +8,13 @@ import {
   TouchableWithoutFeedback,
   View,
 } from "react-native";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Label from "../../components/Label";
 import Color from "../../enum/Color";
 import Font from "../../enum/Font";
-import { setNewTransaction } from "../../redux/reducers/transactions";
+import { RootState } from "../../redux/store";
+import { IUser } from "../../redux/types/transactions";
+import { addNewBill } from "../../services/db/bills";
 import { RootStackParamsList } from "../types/Navigation";
 import Peers from "./Peers";
 import Split from "./Split";
@@ -20,37 +22,63 @@ import Split from "./Split";
 export default function AddExpense({
   navigation: { goBack },
 }: NativeStackScreenProps<RootStackParamsList, "AddExpense">) {
-  const [peers, setPeers] = useState(["You"]);
-  const [whoPay, setWhoPay] = useState("You");
+  const {
+    user: { currentUser },
+  } = useSelector((state: RootState) => state);
+  const [peers, setPeers] = useState<IUser[]>([]);
+  const [whoPay, setWhoPay] = useState<IUser | null>(null);
   const [whatFor, setWhatFor] = useState("");
   const [equalSplit, setEqualSplit] = useState(true);
   const [howMuch, setHowMuch] = useState("");
   const dispatch = useDispatch();
 
+  useEffect(() => {
+    if (currentUser) {
+      const fakePeers = [
+        {
+          id: "18460e75-ae08-4c85-b2da-1f48c395a671",
+          email: "hakmamy@hotmail.com",
+          username: "hakmamy",
+        },
+        {
+          id: "c89185c0-37d5-4f5d-a310-4a24de98dcb1",
+          email: "alice@email.com",
+          username: "alice",
+        },
+      ];
+      setPeers([currentUser, ...fakePeers]);
+      setWhoPay(currentUser);
+    }
+  }, [currentUser]);
+
   const validForm: () => boolean = () => {
-    if (whatFor.length && !isNaN(parseFloat(howMuch)) && whoPay.length)
+    if (whatFor.length && !isNaN(parseFloat(howMuch)) && whoPay)
       return parseFloat(howMuch) > 0;
     return false;
   };
 
   // Submit the form
   const submitForm: () => void = () => {
-    // [!] User's region uses comma or dot ?
-    const howMuchParsed = parseFloat(howMuch.replace(/,/g, "."));
-    const lendees: string[] = peers.filter((name) => name !== whoPay);
+    if (currentUser && whoPay) {
+      // [!] User's region uses comma or dot ?
+      const howMuchParsed = parseFloat(howMuch.replace(/,/g, "."));
 
-    dispatch(
-      setNewTransaction({
-        lender: whoPay,
-        lendees,
-        amount: howMuchParsed,
-        date: JSON.stringify(new Date()),
-        description: whatFor,
-        equalSplit,
-      })
-    );
+      const lendees: string[] = peers
+        .filter(({ id }) => id !== whoPay?.id)
+        .map(({ id }) => id);
 
-    goBack();
+      const newBill = {
+        _lender: whoPay.id,
+        _amount: howMuchParsed,
+        _lendees: lendees,
+        _description: whatFor,
+        _publisher: currentUser?.id,
+        _equalSplit: equalSplit,
+      };
+
+      dispatch(addNewBill(newBill));
+      goBack();
+    }
   };
 
   return (
@@ -78,8 +106,8 @@ export default function AddExpense({
               <Peers
                 peers={peers}
                 lender={whoPay}
-                setLender={(name) => setWhoPay(name)}
-                addPeer={(name) => setPeers((peers) => [...peers, name])}
+                setLender={(lender) => setWhoPay(lender)}
+                addPeer={(user) => setPeers((peers) => [...peers, user])}
               />
             </View>
 

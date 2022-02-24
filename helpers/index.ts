@@ -1,4 +1,9 @@
-import { ISingleTransaction, ITransaction } from "../redux/types/transactions";
+import transactions from "../redux/reducers/transactions";
+import {
+  ISingleTransaction,
+  ITransaction,
+  IUser,
+} from "../redux/types/transactions";
 
 /**
  * Split transactions from grouped/raw transactions
@@ -7,10 +12,9 @@ import { ISingleTransaction, ITransaction } from "../redux/types/transactions";
  */
 export function burstTransactions(rawTransactions: ITransaction[]) {
   return rawTransactions.reduce(
-    (
-      acc: ISingleTransaction[],
-      { lender, lendees, amount, equalSplit, ...rest }
-    ) => {
+    (acc: ISingleTransaction[], transaction: ITransaction) => {
+      const { lender, lendees, amount, equalSplit, ...rest } = transaction;
+
       // [!] equalSplit among lendees only, not including 'You' ?
       const paid = equalSplit
         ? Math.round((amount / (lendees.length + 1)) * 100) / 100
@@ -29,11 +33,15 @@ export function burstTransactions(rawTransactions: ITransaction[]) {
  * @param transactions
  * @returns [ ['Sarah', -5], ...]
  */
-export function sumTransactions(transactions: ISingleTransaction[]) {
+export function sumTransactions(
+  transactions: ISingleTransaction[],
+  userId: string
+) {
   const peers = new Set();
   return transactions
+    .filter(({ lender, lendee }) => [lender.id, lendee.id].includes(userId))
     .map(({ lender, lendee, paid }) =>
-      lendee === "You" ? [lender, -paid] : [lendee, paid]
+      lendee.id === userId ? [lender.username, -paid] : [lendee.username, paid]
     )
     .reduce((acc: [string, number][], transaction: any) => {
       const lender = transaction[0];
@@ -61,9 +69,41 @@ export function dissectTransaction(transaction: ITransaction) {
   const divisor = equalSplit ? members.length : lendees.length;
   const paid = Math.round((amount / divisor) * 100) / 100;
   const details = members.map((member) => {
-    return !equalSplit && member === lender
-      ? { name: member, amount }
-      : { name: member, amount: -paid };
+    return !equalSplit && member.username === lender.username
+      ? { name: member.username, amount }
+      : { name: member.username, amount: -paid };
   });
   return { ...transaction, details };
+}
+
+/**
+ * Get transactions that macth friend and current user
+ * @param transactions Raw transactions
+ * @param friendName Friend's username
+ * @param currentUser
+ * @returns Array of transactions
+ */
+export function friendTransactions(
+  transactions: ITransaction[],
+  friendName: string,
+  currentUser: IUser | null
+) {
+  const userInLendees = (lendees: IUser[], username: string | undefined) => {
+    const members = new Set();
+    lendees.forEach((user) => members.add(user.username));
+    return members.has(username);
+  };
+
+  return transactions
+    .filter(
+      ({ lendees, lender }) =>
+        lender.username === friendName ||
+        (userInLendees(lendees, friendName) &&
+          lender.username === currentUser?.username)
+    )
+    .sort(
+      (a, b) =>
+        new Date(JSON.parse(b.updated_at)).getTime() -
+        new Date(JSON.parse(a.updated_at)).getTime()
+    );
 }

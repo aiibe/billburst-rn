@@ -4,8 +4,13 @@ import { Pressable, ScrollView, Text, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import Title from "../../components/Title";
 import { burstTransactions, sumTransactions } from "../../helpers";
-import { updateExpanded } from "../../redux/reducers/transactions";
+import {
+  setTransactions,
+  updateExpanded,
+} from "../../redux/reducers/transactions";
 import { RootState } from "../../redux/store";
+import { ITransaction } from "../../redux/types/transactions";
+import { getBills } from "../../services/db/bills";
 import { RootStackParamsList } from "../types/Navigation";
 import Balance from "./Balance";
 import Peer from "./Peer";
@@ -15,21 +20,30 @@ export default function Overview({
 }: NativeStackScreenProps<RootStackParamsList, "Overview">) {
   const {
     transactions: { raw, expanded },
+    user: { currentUser },
   } = useSelector((state: RootState) => state);
   const dispatch = useDispatch();
+
+  // Load data
+  useEffect(() => {
+    const fetchBills = async () => {
+      const { data, error } = await getBills();
+      if (error) return console.log(error);
+      dispatch(setTransactions(data as ITransaction[]));
+    };
+
+    fetchBills();
+  }, []);
 
   useEffect(() => {
     // Updated expanded transactions everytime raw transactions updated
     dispatch(updateExpanded(burstTransactions(raw)));
   }, [raw]);
 
-  const peers: [string, number][] = !expanded.length
-    ? []
-    : sumTransactions(
-        expanded.filter(({ lender, lendee }) =>
-          [lender, lendee].includes("You")
-        )
-      );
+  const peers: [string, number][] =
+    !expanded.length || !currentUser
+      ? []
+      : sumTransactions(expanded, currentUser.id);
 
   return (
     <View

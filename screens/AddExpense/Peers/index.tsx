@@ -2,13 +2,14 @@ import { useState } from "react";
 import { Pressable, Text, View } from "react-native";
 import Color from "../../../enum/Color";
 import Font from "../../../enum/Font";
+import { IUser } from "../../../redux/types/transactions";
 import Add from "./Add";
 
 interface IPeersProps {
-  peers: string[];
-  lender: string;
-  setLender: (name: string) => void;
-  addPeer: (name: string) => void;
+  peers: IUser[];
+  lender: IUser | null;
+  setLender: (lender: IUser) => void;
+  addPeer: (user: IUser) => void;
 }
 
 export default function Peers({
@@ -21,12 +22,12 @@ export default function Peers({
 
   return (
     <View style={{ display: "flex", flexDirection: "row", flexWrap: "wrap" }}>
-      {peers.map((name, idx) => (
+      {peers.map((user, idx) => (
         <Pressable
           key={idx}
-          onPress={() => setLender(name)}
+          onPress={() => setLender(user)}
           style={{
-            backgroundColor: lender === name ? Color.primary : Color.grayLight,
+            backgroundColor: lender === user ? Color.primary : Color.grayLight,
             paddingHorizontal: 15,
             paddingVertical: 5,
             borderRadius: 10,
@@ -37,19 +38,19 @@ export default function Peers({
           <Text
             style={{
               fontSize: 18,
-              color: lender === name ? "white" : "black",
+              color: lender === user ? "white" : "black",
               fontFamily: Font.bold,
             }}
           >
-            {name}
+            {user.username}
           </Text>
         </Pressable>
       ))}
-      <Add
+      {/* <Add
         submit={addPeer}
         editing={editing}
         toggle={() => setEditing(!editing)}
-      />
+      /> */}
     </View>
   );
 }
