@@ -6,6 +6,7 @@ interface IInitialState {
   raw: ITransaction[];
   expanded: ISingleTransaction[];
   loading: boolean;
+  errorMessage: string;
 }
 
 const initialState: IInitialState = {
@@ -40,6 +41,7 @@ const initialState: IInitialState = {
   ],
   expanded: [],
   loading: false,
+  errorMessage: "",
 };
 
 export const transactionsSlice = createSlice({
@@ -59,10 +61,11 @@ export const transactionsSlice = createSlice({
     });
     addCase(addNewBill.fulfilled, (state, { payload }) => {
       state.loading = false;
-      if (payload) state.raw = payload;
+      state.raw.push(payload);
     });
-    addCase(addNewBill.rejected, (state) => {
+    addCase(addNewBill.rejected, (state, { payload }) => {
       state.loading = false;
+      if (payload) state.errorMessage = payload.message;
     });
   },
 });
