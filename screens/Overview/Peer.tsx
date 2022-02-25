@@ -17,7 +17,7 @@ const Peer = ({ transaction }: IPeerProps) => {
   const { navigate } = useNavigation<IOverviewScreenProps>();
   const friend = transaction[0];
   const amount = transaction[1];
-  const oweLent = "$" + Math.abs(amount);
+  const oweLent = "$" + Math.abs(Math.round(amount * 100) / 100);
 
   return (
     <Pressable
