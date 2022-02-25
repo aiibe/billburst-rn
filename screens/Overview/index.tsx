@@ -26,13 +26,7 @@ export default function Overview({
 
   // Load data
   useEffect(() => {
-    const fetchBills = async () => {
-      const { data, error } = await getBills();
-      if (error) return console.log(error);
-      dispatch(setTransactions(data as ITransaction[]));
-    };
-
-    fetchBills();
+    dispatch(getBills());
   }, []);
 
   useEffect(() => {
