@@ -4,12 +4,8 @@ import { Pressable, ScrollView, Text, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import Title from "../../components/Title";
 import { burstTransactions, sumTransactions } from "../../helpers";
-import {
-  setTransactions,
-  updateExpanded,
-} from "../../redux/reducers/transactions";
+import { updateExpanded } from "../../redux/reducers/transactions";
 import { RootState } from "../../redux/store";
-import { ITransaction } from "../../redux/types/transactions";
 import { getBills } from "../../services/db/bills";
 import { RootStackParamsList } from "../types/Navigation";
 import Balance from "./Balance";
