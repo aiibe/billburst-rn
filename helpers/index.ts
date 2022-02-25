@@ -1,9 +1,5 @@
-import transactions from "../redux/reducers/transactions";
-import {
-  ISingleTransaction,
-  ITransaction,
-  IUser,
-} from "../redux/types/transactions";
+import { ISingleTransaction, ITransaction } from "../redux/types/transactions";
+import { IUser } from "../redux/types/user";
 
 /**
  * Split transactions from grouped/raw transactions
