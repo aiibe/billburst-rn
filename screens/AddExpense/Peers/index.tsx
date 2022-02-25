@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Pressable, Text, View } from "react-native";
 import Color from "../../../enum/Color";
 import Font from "../../../enum/Font";
-import { IUser } from "../../../redux/types/transactions";
+import { IUser } from "../../../redux/types/user";
 import Add from "./Add";
 
 interface IPeersProps {

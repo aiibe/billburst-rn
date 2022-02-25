@@ -13,7 +13,7 @@ import Label from "../../components/Label";
 import Color from "../../enum/Color";
 import Font from "../../enum/Font";
 import { RootState } from "../../redux/store";
-import { IUser } from "../../redux/types/transactions";
+import { IUser } from "../../redux/types/user";
 import { addNewBill } from "../../services/db/bills";
 import { RootStackParamsList } from "../types/Navigation";
 import Peers from "./Peers";

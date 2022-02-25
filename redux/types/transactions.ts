@@ -1,8 +1,4 @@
-export interface IUser {
-  email: string;
-  username: string;
-  id: string;
-}
+import { IUser } from "./user";
 
 export interface ITransaction {
   lender: IUser;

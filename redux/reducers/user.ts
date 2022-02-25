@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { IUser } from "../types/transactions";
+import { IUser } from "../types/user";
 
 interface ICurrentUser {
   currentUser: IUser | null;
