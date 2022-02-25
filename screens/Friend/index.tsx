@@ -34,7 +34,7 @@ export default function Friend({
         backgroundColor: "white",
       }}
     >
-      <ScrollView>
+      <ScrollView showsVerticalScrollIndicator={false}>
         <View style={{ height: 20 }} />
         {withFriend.map((transaction, i) => (
           <Transaction key={i} data={transaction} currentUser={currentUser} />
