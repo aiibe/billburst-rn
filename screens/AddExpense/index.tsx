@@ -10,6 +10,7 @@ import {
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import Label from "../../components/Label";
+import Select from "../../components/Select";
 import Color from "../../enum/Color";
 import Font from "../../enum/Font";
 import { RootState } from "../../redux/store";
@@ -17,7 +18,6 @@ import { IUser } from "../../redux/types/user";
 import { RootStackParamsList } from "../types/Navigation";
 import { addNewBill } from "./actions";
 import Peers from "./Peers";
-import Split from "./Split";
 
 export default function AddExpense({
   navigation: { goBack },
@@ -151,9 +151,13 @@ export default function AddExpense({
             {/* How to split */}
             <View style={{ marginBottom: 20 }}>
               <Label title="How to split ?" />
-              <Split
+              <Select
                 onChange={(value) => setEqualSplit(value)}
                 selected={equalSplit}
+                options={[
+                  { key: "Evenly", value: true },
+                  { key: "Fully", value: false },
+                ]}
               />
             </View>
           </View>

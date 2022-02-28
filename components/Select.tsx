@@ -1,18 +1,14 @@
-import { View, Text, Pressable } from "react-native";
-import Color from "../../enum/Color";
-import Font from "../../enum/Font";
+import { Pressable, Text, View } from "react-native";
+import Color from "../enum/Color";
+import Font from "../enum/Font";
 
-interface ISplitProps {
+interface ISelectProps {
   selected: boolean;
   onChange: (value: boolean) => void;
+  options: { key: string; value: any }[];
 }
 
-const splitOptions = [
-  { key: "Evenly", value: true },
-  { key: "Fully", value: false },
-];
-
-export default function Split({ selected, onChange }: ISplitProps) {
+export default function Select({ selected, onChange, options }: ISelectProps) {
   return (
     <View
       style={{
@@ -21,7 +17,7 @@ export default function Split({ selected, onChange }: ISplitProps) {
         justifyContent: "space-between",
       }}
     >
-      {splitOptions.map(({ key, value }) => (
+      {options.map(({ key, value }) => (
         <Pressable
           key={key}
           onPress={() => onChange(value)}
