@@ -13,10 +13,8 @@ import Peer from "./Peer";
 export default function Overview({
   navigation: { navigate },
 }: NativeStackScreenProps<RootStackParamsList, "Overview">) {
-  const {
-    transactions: { raw },
-    user: { currentUser },
-  } = useSelector((state: RootState) => state);
+  const raw = useSelector((state: RootState) => state.transactions.raw);
+  const currentUser = useSelector((state: RootState) => state.user.currentUser);
   const dispatch = useDispatch();
 
   // Load data
