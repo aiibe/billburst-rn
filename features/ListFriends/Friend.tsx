@@ -1,10 +1,9 @@
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import React from "react";
 import { Pressable, Text, View } from "react-native";
 import Color from "../../enum/Color";
 import Font from "../../enum/Font";
-import { RootStackParamsList } from "../types/Navigation";
+import { RootStackParamsList } from "../../screens/types/Navigation";
 
 interface IPeerProps {
   transaction: [string, number];
@@ -13,7 +12,7 @@ interface IPeerProps {
 interface IOverviewScreenProps
   extends NativeStackNavigationProp<RootStackParamsList, "Overview"> {}
 
-const Peer = ({ transaction }: IPeerProps) => {
+const Friend = ({ transaction }: IPeerProps) => {
   const { navigate } = useNavigation<IOverviewScreenProps>();
   const friend = transaction[0];
   const amount = transaction[1];
@@ -62,4 +61,4 @@ const Peer = ({ transaction }: IPeerProps) => {
   );
 };
 
-export default Peer;
+export default Friend;

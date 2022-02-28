@@ -1,14 +1,14 @@
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useEffect } from "react";
-import { Pressable, ScrollView, Text, View } from "react-native";
+import { Pressable, Text, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import Title from "../../components/Title";
+import Balance from "../../features/Balance";
+import ListFriends from "../../features/ListFriends";
 import { burstTransactions, sumTransactions } from "../../helpers";
 import { RootState } from "../../redux/store";
 import { getBills } from "../AddExpense/actions";
 import { RootStackParamsList } from "../types/Navigation";
-import Balance from "./Balance";
-import Peer from "./Peer";
 
 export default function Overview({
   navigation: { navigate },
@@ -48,11 +48,7 @@ export default function Overview({
       <Balance transactions={peers} />
 
       {/* List of friends with total amount you owe/lent each */}
-      <ScrollView style={{ flexGrow: 1 }} showsVerticalScrollIndicator={false}>
-        {peers.map((transaction, idx) => (
-          <Peer key={idx} transaction={transaction} />
-        ))}
-      </ScrollView>
+      <ListFriends friends={peers} />
     </View>
   );
 }
