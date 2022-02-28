@@ -1,5 +1,3 @@
-import { createAsyncThunk } from "@reduxjs/toolkit";
-import { PostgrestError } from "@supabase/supabase-js";
 import { ITransaction } from "../../redux/types/transactions";
 import supabase from "../../supabase";
 
@@ -12,57 +10,57 @@ interface IAddNewBillParams {
   lender: string;
 }
 
-export const addNewBill = createAsyncThunk<
-  ITransaction,
-  IAddNewBillParams,
-  { rejectValue: PostgrestError }
->(
-  "transactions/addNewBill",
-  async (params: IAddNewBillParams, { rejectWithValue }) => {
-    const { lendees, ...rest } = params;
+export const addOne = async (item: IAddNewBillParams) => {
+  const { lendees, ...rest } = item;
 
-    // Insert new bill into bills
-    const { data: bills_data, error: bills_error } = await supabase
-      .from("bills")
-      .insert({ ...rest })
-      .select("*, lender:users!bills_lender_fkey(*)")
-      .limit(1)
-      .single();
-    if (bills_error) return rejectWithValue(bills_error);
+  // Insert new bill into bills
+  const { data: bills_data, error: bills_error } = await supabase
+    .from("bills")
+    .insert({ ...rest })
+    .select("*, lender:users!bills_lender_fkey(*)")
+    .limit(1)
+    .single();
+  if (bills_error) return { data: null, error: bills_error };
 
-    // Bulk insert lendees into lendees_bills
-    const { data: lendees_data, error: lendees_error } = await supabase
-      .from("lendees_bills")
-      .insert(
-        lendees.map((user_id) => ({
-          bill_id: bills_data.id,
-          user_id,
-        }))
-      )
-      .select(`user:users(*)`);
-    if (lendees_error) return rejectWithValue(lendees_error);
+  // Prepare lendees
+  const bulkLendees = lendees.map((user_id) => ({
+    bill_id: bills_data.id,
+    user_id,
+  }));
 
-    // Manually assemble payload with embed lendees
-    const payload: ITransaction = {
-      ...bills_data,
-      lendees: lendees_data?.map(({ user }) => user),
-    };
+  // Bulk insert lendees into lendees_bills
+  const { error: lendees_error } = await supabase
+    .from("lendees_bills")
+    .insert(bulkLendees)
+    .select(`user:users(*)`);
+  if (lendees_error) return { data: null, error: lendees_error };
 
-    return payload;
-  }
-);
+  // Get freshly inserted bill
+  return await findOneById(bills_data.id);
+};
 
-export const getBills = createAsyncThunk<
-  ITransaction[],
-  void,
-  { rejectValue: PostgrestError }
->("transactions/getBills", async (_, { rejectWithValue }) => {
-  const { error, data } = await supabase.from<ITransaction>("bills").select(
+/**
+ * Find a bill by ID with relations
+ * @param id Bill ID
+ * @returns Single bill with relations
+ */
+export const findOneById = async (id: string | number) => {
+  return await supabase
+    .from("bills")
+    .select(
+      `*,
+    lender:users!bills_lender_fkey(*),
+    lendees:users!lendees_bills(*)`
+    )
+    .eq("id", id)
+    .limit(1)
+    .single();
+};
+
+export const findMany = async () => {
+  return await supabase.from<ITransaction>("bills").select(
     `*,
       lender:users!bills_lender_fkey(*),
       lendees:users!lendees_bills(*)`
   );
-  if (error) return rejectWithValue(error);
-
-  return !data?.length ? [] : data;
-});
+};

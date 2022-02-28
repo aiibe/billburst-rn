@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import Title from "../../components/Title";
 import { burstTransactions, sumTransactions } from "../../helpers";
 import { RootState } from "../../redux/store";
-import { getBills } from "../../services/db/bills";
+import { getBills } from "../AddExpense/actions";
 import { RootStackParamsList } from "../types/Navigation";
 import Balance from "./Balance";
 import Peer from "./Peer";

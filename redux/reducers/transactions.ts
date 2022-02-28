@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { addNewBill, getBills } from "../../services/db/bills";
+import { addNewBill, getBills } from "../../screens/AddExpense/actions";
 import { ITransaction } from "../types/transactions";
 
 interface IInitialState {
