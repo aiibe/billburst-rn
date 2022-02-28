@@ -38,13 +38,14 @@ export const addNewBill = createAsyncThunk<
           bill_id: bills_data.id,
           user_id,
         }))
-      );
+      )
+      .select(`user:users(*)`);
     if (lendees_error) return rejectWithValue(lendees_error);
 
     // Manually assemble payload with embed lendees
     const payload: ITransaction = {
       ...bills_data,
-      lendees: lendees_data,
+      lendees: lendees_data?.map(({ user }) => user),
     };
 
     return payload;
