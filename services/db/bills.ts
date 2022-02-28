@@ -10,33 +10,35 @@ interface IAddNewBillParams {
   lender: string;
 }
 
+/**
+ * Insert a bill with relations (lendees)
+ * @param item New bill to insert
+ * @returns Inserted bill
+ */
 export const addOne = async (item: IAddNewBillParams) => {
   const { lendees, ...rest } = item;
 
   // Insert new bill into bills
-  const { data: bills_data, error: bills_error } = await supabase
+  const resBills = await supabase
     .from("bills")
     .insert({ ...rest })
-    .select("*, lender:users!bills_lender_fkey(*)")
+    .select(`id`)
     .limit(1)
     .single();
-  if (bills_error) return { data: null, error: bills_error };
+  if (resBills.error) return resBills;
 
   // Prepare lendees
   const bulkLendees = lendees.map((user_id) => ({
-    bill_id: bills_data.id,
+    bill_id: resBills.data.id,
     user_id,
   }));
 
   // Bulk insert lendees into lendees_bills
-  const { error: lendees_error } = await supabase
-    .from("lendees_bills")
-    .insert(bulkLendees)
-    .select(`user:users(*)`);
-  if (lendees_error) return { data: null, error: lendees_error };
+  const resLendees = await supabase.from("lendees_bills").insert(bulkLendees);
+  if (resLendees.error) return resLendees;
 
   // Get freshly inserted bill
-  return await findOneById(bills_data.id);
+  return await findOneById(resBills.data.id);
 };
 
 /**
@@ -57,6 +59,10 @@ export const findOneById = async (id: string | number) => {
     .single();
 };
 
+/**
+ * Fetch all bills
+ * @returns Bills
+ */
 export const findMany = async () => {
   return await supabase.from<ITransaction>("bills").select(
     `*,
