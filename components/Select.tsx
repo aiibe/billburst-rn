@@ -1,4 +1,4 @@
-import { Pressable, Text, View } from "react-native";
+import { Pressable, StyleProp, Text, View, ViewStyle } from "react-native";
 import Color from "../enum/Color";
 import Font from "../enum/Font";
 
@@ -6,17 +6,17 @@ interface ISelectProps {
   selected: boolean;
   onChange: (value: boolean) => void;
   options: { key: string; value: any }[];
+  containerStyle?: StyleProp<ViewStyle>;
 }
 
-export default function Select({ selected, onChange, options }: ISelectProps) {
+export default function Select({
+  selected,
+  onChange,
+  options,
+  containerStyle,
+}: ISelectProps) {
   return (
-    <View
-      style={{
-        display: "flex",
-        flexDirection: "row",
-        justifyContent: "space-between",
-      }}
-    >
+    <View style={[containerStyle]}>
       {options.map(({ key, value }) => (
         <Pressable
           key={key}
