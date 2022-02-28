@@ -4,7 +4,6 @@ import { Pressable, ScrollView, Text, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import Title from "../../components/Title";
 import { burstTransactions, sumTransactions } from "../../helpers";
-import { updateExpanded } from "../../redux/reducers/transactions";
 import { RootState } from "../../redux/store";
 import { getBills } from "../../services/db/bills";
 import { RootStackParamsList } from "../types/Navigation";
@@ -15,7 +14,7 @@ export default function Overview({
   navigation: { navigate },
 }: NativeStackScreenProps<RootStackParamsList, "Overview">) {
   const {
-    transactions: { raw, expanded },
+    transactions: { raw },
     user: { currentUser },
   } = useSelector((state: RootState) => state);
   const dispatch = useDispatch();
@@ -23,17 +22,13 @@ export default function Overview({
   // Load data
   useEffect(() => {
     dispatch(getBills());
-  }, []);
+  }, [dispatch]);
 
-  useEffect(() => {
-    // Updated expanded transactions everytime raw transactions updated
-    dispatch(updateExpanded(burstTransactions(raw)));
-  }, [raw]);
-
+  // Compute transactions on the fly
   const peers: [string, number][] =
-    !expanded.length || !currentUser
-      ? []
-      : sumTransactions(expanded, currentUser.id);
+    raw.length && currentUser
+      ? sumTransactions(burstTransactions(raw), currentUser.id)
+      : [];
 
   return (
     <View

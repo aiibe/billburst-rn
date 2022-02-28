@@ -1,17 +1,15 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
 import { addNewBill, getBills } from "../../services/db/bills";
-import { ISingleTransaction, ITransaction } from "../types/transactions";
+import { ITransaction } from "../types/transactions";
 
 interface IInitialState {
   raw: ITransaction[];
-  expanded: ISingleTransaction[];
   loading: boolean;
   errorMessage: string;
 }
 
 const initialState: IInitialState = {
   raw: [],
-  expanded: [],
   loading: false,
   errorMessage: "",
 };
@@ -19,12 +17,7 @@ const initialState: IInitialState = {
 export const transactionsSlice = createSlice({
   name: "transactions",
   initialState,
-  reducers: {
-    setTransactions: (state, action: PayloadAction<ITransaction[]>) => {},
-    updateExpanded: (state, action: PayloadAction<ISingleTransaction[]>) => {
-      state.expanded = action.payload;
-    },
-  },
+  reducers: {},
   extraReducers: ({ addCase }) => {
     // Get/Set Bills
     addCase(getBills.pending, (state) => {
@@ -54,5 +47,5 @@ export const transactionsSlice = createSlice({
   },
 });
 
-export const { updateExpanded, setTransactions } = transactionsSlice.actions;
+export const {} = transactionsSlice.actions;
 export default transactionsSlice.reducer;
