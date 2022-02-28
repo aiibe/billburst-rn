@@ -34,5 +34,5 @@ export const getBills = createAsyncThunk<
   const { error, data } = await findMany();
   if (error) return rejectWithValue(error);
 
-  return !data?.length ? [] : data;
+  return !data ? [] : data;
 });
