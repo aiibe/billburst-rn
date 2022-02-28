@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Pressable, Text, TextInput, View } from "react-native";
-import Color from "../../../enum/Color";
-import Font from "../../../enum/Font";
+import Color from "../../enum/Color";
+import Font from "../../enum/Font";
 
 interface IAddProps {
   toggle: () => void;

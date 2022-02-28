@@ -13,11 +13,11 @@ import Label from "../../components/Label";
 import Select from "../../components/Select";
 import Color from "../../enum/Color";
 import Font from "../../enum/Font";
+import Peers from "../../features/Peers";
 import { RootState } from "../../redux/store";
 import { IUser } from "../../redux/types/user";
 import { RootStackParamsList } from "../types/Navigation";
 import { addNewBill } from "./actions";
-import Peers from "./Peers";
 
 export default function AddExpense({
   navigation: { goBack },
@@ -152,6 +152,11 @@ export default function AddExpense({
             <View style={{ marginBottom: 20 }}>
               <Label title="How to split ?" />
               <Select
+                containerStyle={{
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                }}
                 onChange={(value) => setEqualSplit(value)}
                 selected={equalSplit}
                 options={[
