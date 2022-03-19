@@ -6,6 +6,7 @@ import {
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import AppLoading from "expo-app-loading";
+import "react-native-url-polyfill/auto";
 import { Provider } from "react-redux";
 import { store } from "./redux/store";
 import AddExpense from "./screens/AddExpense";
@@ -15,7 +16,6 @@ import Friend from "./screens/Friend";
 // import AddExpense from "./screens/AddExpense";
 import Overview from "./screens/Overview";
 import { RootStackParamsList } from "./screens/types/Navigation";
-import "react-native-url-polyfill/auto";
 
 // Stack
 const { Navigator, Screen, Group } =
@@ -32,14 +32,17 @@ export default function App() {
       <NavigationContainer>
         <Navigator>
           <Group>
+            {/* Overview */}
             <Screen
               name="Overview"
               component={Overview}
               options={{ headerShown: false }}
             />
+            {/* Friend */}
             <Screen name="Friend" component={Friend} />
           </Group>
           <Group screenOptions={{ presentation: "modal" }}>
+            {/* Add Expense */}
             <Screen name="Add expense" component={AddExpense} />
           </Group>
 
